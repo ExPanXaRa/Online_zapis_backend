@@ -16,9 +16,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig  {
 	private final StringRedisTemplate stringRedisTemplate;
+	private final CoockieProvider coockieProvider;
 
-	public SecurityConfig(StringRedisTemplate stringRedisTemplate) {
+	public SecurityConfig(StringRedisTemplate stringRedisTemplate, CoockieProvider coockieProvider) {
 		this.stringRedisTemplate = stringRedisTemplate;
+		this.coockieProvider = coockieProvider;
 	}
 
 	@Bean
@@ -44,7 +46,7 @@ public class SecurityConfig  {
 								.requestMatchers("/auth/register", "/auth/login", "/auth/resetPassword").permitAll()
 								.anyRequest().authenticated()
 				)
-				.addFilterBefore(new CoockieAuthFilter(stringRedisTemplate), UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(new CoockieAuthFilter(coockieProvider, stringRedisTemplate), UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
 

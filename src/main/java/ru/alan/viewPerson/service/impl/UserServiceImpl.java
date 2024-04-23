@@ -2,6 +2,7 @@ package ru.alan.viewPerson.service.impl;
 
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,14 +30,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 
-//	@Override
-//	@Transactional(readOnly = true)
-//	public UserDetails loadUserByUsername(String login) {
-//		return (UserDetails) userRepository.findByEmail(login)
-//				.orElseThrow(() -> {
-//					throw new IllegalArgumentException("User with email:" + login + " not found.");
-//				});
-//	}
+	@Override
+	@Transactional(readOnly = true)
+	public UserDetails loadUserByUsername(String login) {
+		return (UserDetails) userRepository.findByEmail(login)
+				.orElseThrow(() -> {
+					throw new IllegalArgumentException("User with email:" + login + " not found.");
+				});
+	}
 
 
 
