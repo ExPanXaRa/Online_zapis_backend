@@ -46,7 +46,7 @@ public class SecurityConfig  {
 								.requestMatchers("/auth/register", "/auth/login", "/auth/resetPassword").permitAll()
 								.anyRequest().authenticated()
 				)
-				.addFilterBefore(new CoockieAuthFilter(coockieProvider, stringRedisTemplate), UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(new CoockieAuthFilter(stringRedisTemplate), UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
 

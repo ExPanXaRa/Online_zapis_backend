@@ -1,7 +1,6 @@
 package ru.alan.viewPerson.entity;
 
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
 
 @Table(name = "Person")
 @Entity

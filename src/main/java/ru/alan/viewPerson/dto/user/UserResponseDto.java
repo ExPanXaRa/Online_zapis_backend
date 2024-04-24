@@ -1,9 +1,7 @@
 package ru.alan.viewPerson.dto.user;
 
 import ru.alan.viewPerson.entity.Role;
-
 import java.io.Serializable;
-import java.util.Set;
 
 public class UserResponseDto implements Serializable {
 

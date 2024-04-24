@@ -3,7 +3,6 @@ package ru.alan.viewPerson.dto.user;
 import org.hibernate.validator.constraints.Length;
 import ru.alan.viewPerson.dto.validation.OnCreate;
 import ru.alan.viewPerson.dto.validation.OnPasswordUpdate;
-
 import javax.validation.constraints.NotBlank;
 
 public class UserResetPasswordDto {
