@@ -28,24 +28,7 @@ public class AuthController {
     private final AuthService authService;
     private final UserService userService;
     private final StringRedisTemplate stringRedisTemplate;
-    private final UserAuthMapper userAuthMapper;
-    private final UserMapper userMapper;
 
-//    @PostMapping("/register")
-//    public ResponseEntity<User> registerUser(@RequestBody UserRequestDto userRequestDto) {
-//        System.out.println("RAK");
-//        User user = userAuthMapper.mapToEntity(userRequestDto);
-//        System.out.println("ALFLA");
-//        User newUser = userService.create(user);
-//        System.out.println("KALLL");
-//        return new ResponseEntity<>(newUser, HttpStatus.CREATED); // TODO GAVNO YBRAT
-//    }
-//    @PostMapping("/register")
-//    public UserDto register(@Validated(OnCreate.class) @RequestBody UserDto userDto) {
-//        User user = userMapper.toEntity(userDto);
-//        User createdUser = userService.create(user);
-//        return userMapper.toDto(createdUser);
-//    }
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> registerUser(@RequestBody UserRequestDto userRequestDto) {
         UserResponseDto newUser = userService.create(userRequestDto);

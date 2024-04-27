@@ -20,7 +20,7 @@ public class UserAuthMapper {
 		UserResponseDto.setId(user.getId());
 		UserResponseDto.setEmail(user.getUsername());
 		UserResponseDto.setLogin(user.getName());
-		UserResponseDto.setRoles(Role.ROLE_USER);// TODO переделать в SET
+		UserResponseDto.setRoles(user.getRoles());
 		return UserResponseDto;
 	}
 
