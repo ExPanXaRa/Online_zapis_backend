@@ -19,11 +19,16 @@ public class TaskDto {
     @NotNull(message = "Id must be not null", groups = OnUpdate.class)
     private Long id;
 
-    @NotNull(message = "Title must be not null", groups = {OnCreate.class, OnUpdate.class})
-    @Length(max = 255, message = "Title length must be smaller than 255 symbols", groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(message = "Title must be not null",
+            groups = {OnCreate.class, OnUpdate.class})
+    @Length(max = 255,
+            message = "Title length must be smaller than 255 symbols",
+            groups = {OnCreate.class, OnUpdate.class})
     private String title;
 
-    @Length(max = 255, message = "Description length must be smaller than 255 symbols", groups = {OnCreate.class, OnUpdate.class})
+    @Length(max = 255,
+            message = "Description length must be smaller than 255 symbols",
+            groups = {OnCreate.class, OnUpdate.class})
     private String description;
 
     private Status status;
@@ -32,7 +37,8 @@ public class TaskDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime expirationDate;
 
-    @JsonProperty(access =  JsonProperty.Access.READ_ONLY) // только чтение картинок
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    // только чтение картинок
     private List<String> images;
 
 }
