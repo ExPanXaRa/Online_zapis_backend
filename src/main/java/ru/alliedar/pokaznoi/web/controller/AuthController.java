@@ -33,7 +33,6 @@ public class AuthController {
     private final UserService userService;
     private final StringRedisTemplate stringRedisTemplate;
     private final UserAuthMapper userAuthMapper;
-    private final UserMapper userMapper;
 
     //    @PostMapping("/register")
 //    public ResponseEntity<User> registerUser(
@@ -53,12 +52,19 @@ public class AuthController {
 //        User createdUser = userService.create(user);
 //        return userMapper.toDto(createdUser);
 //    }
+
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> registerUser(
             final @RequestBody UserRequestDto userRequestDto) {
         UserResponseDto newUser = userService.create(userRequestDto);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
+//    @PostMapping("/register")
+//    public ResponseEntity<UserResponseDto> register(@Validated(OnCreate.class) @RequestBody UserRequestDto userRequestDto) {
+//        User user = userAuthMapper.mapToEntity(userRequestDto);
+//        User createdUser = userService.create(user);
+//        return new ResponseEntity<>(userAuthMapper.mapToDTO(createdUser), HttpStatus.CREATED);
+//    }
 
     @PostMapping("/login")
     public ResponseEntity<UserResponseDto> loginUser(
@@ -90,7 +96,11 @@ public class AuthController {
 
         if (exists != null && exists) {
             stringRedisTemplate.delete(sessionId);
-            return ResponseEntity.ok(HttpStatus.OK); // TODO удалят куки
+            Cookie cookie = new Cookie("sessionId", null);
+            cookie.setPath("/");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+            return ResponseEntity.ok(HttpStatus.OK);// TODO удалят куки
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

@@ -1,30 +1,11 @@
 package ru.alliedar.pokaznoi.web.dto.auth;
 
+import lombok.Data;
+
+@Data
 public class UserLoginRequestDto {
+
     private String email;
     private String password;
 
-    public UserLoginRequestDto() {
-    }
-
-    public UserLoginRequestDto(final String email, final String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(final String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(final String password) {
-        this.password = password;
-    }
 }

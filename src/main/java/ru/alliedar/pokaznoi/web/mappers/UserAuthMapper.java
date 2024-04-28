@@ -15,13 +15,13 @@ import java.util.Set;
 public class UserAuthMapper {
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponseDto mapToDTO(final User user) {
-        UserResponseDto userResponseDto = new UserResponseDto();
-        userResponseDto.setId(user.getId());
-        userResponseDto.setEmail(user.getUsername());
-        userResponseDto.setLogin(user.getName());
-        userResponseDto.setRoles(Role.ROLE_USER); // TODO переделать в SET
-        return userResponseDto;
+    public UserResponseDto mapToDTO(User user) {
+      UserResponseDto UserResponseDto = new UserResponseDto();
+      UserResponseDto.setId(user.getId());
+      UserResponseDto.setEmail(user.getUsername());
+      UserResponseDto.setLogin(user.getName());
+      UserResponseDto.setRoles(user.getRoles());
+      return UserResponseDto;
     }
 
     public User mapToEntity(final UserRequestDto requestDto) {
