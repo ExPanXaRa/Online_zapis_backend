@@ -20,7 +20,6 @@ import ru.alliedar.pokaznoi.web.dto.auth.UserLoginRequestDto;
 import ru.alliedar.pokaznoi.web.dto.auth.UserResponseDto;
 import ru.alliedar.pokaznoi.web.dto.auth.UserResetPasswordDto;
 import ru.alliedar.pokaznoi.web.mappers.UserAuthMapper;
-import ru.alliedar.pokaznoi.web.mappers.UserMapper;
 
 import java.util.UUID;
 
@@ -60,10 +59,12 @@ public class AuthController {
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 //    @PostMapping("/register")
-//    public ResponseEntity<UserResponseDto> register(@Validated(OnCreate.class) @RequestBody UserRequestDto userRequestDto) {
+//    public ResponseEntity<UserResponseDto> register(@Validated(OnCreate.class)
+//    @RequestBody UserRequestDto userRequestDto) {
 //        User user = userAuthMapper.mapToEntity(userRequestDto);
 //        User createdUser = userService.create(user);
-//        return new ResponseEntity<>(userAuthMapper.mapToDTO(createdUser), HttpStatus.CREATED);
+//        return new ResponseEntity<>(userAuthMapper.mapToDTO(createdUser),
+//        HttpStatus.CREATED);
 //    }
 
     @PostMapping("/login")
@@ -100,7 +101,7 @@ public class AuthController {
             cookie.setPath("/");
             cookie.setMaxAge(0);
             response.addCookie(cookie);
-            return ResponseEntity.ok(HttpStatus.OK);// TODO удалят куки
+            return ResponseEntity.ok(HttpStatus.OK); // TODO удалят куки
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

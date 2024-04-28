@@ -4,6 +4,7 @@ package ru.alliedar.pokaznoi.web.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,7 +66,7 @@ public class TaskController {
     @Operation(summary = "Upload image to task")
     @PreAuthorize("canAccessTask(#id)")
     public void uploadImage(final @PathVariable Long id,
-                            final @Validated 
+                            final @Validated
                             @ModelAttribute TaskImageDto imageDto) {
         TaskImage image = taskImageMapper.toEntity(imageDto);
         taskService.uploadImage(id, image);

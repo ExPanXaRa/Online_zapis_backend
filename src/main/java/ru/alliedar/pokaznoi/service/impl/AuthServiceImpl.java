@@ -1,14 +1,12 @@
 package ru.alliedar.pokaznoi.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.alliedar.pokaznoi.domain.user.User;
 import ru.alliedar.pokaznoi.repository.UserRepository;
 import ru.alliedar.pokaznoi.service.AuthService;
-import ru.alliedar.pokaznoi.service.UserService;
 import ru.alliedar.pokaznoi.web.dto.auth.UserChangePasswordDto;
 import ru.alliedar.pokaznoi.web.dto.auth.UserLoginRequestDto;
 import ru.alliedar.pokaznoi.web.dto.auth.UserResetPasswordDto;

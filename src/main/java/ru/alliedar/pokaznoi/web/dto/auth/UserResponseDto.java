@@ -5,6 +5,7 @@ import ru.alliedar.pokaznoi.domain.user.Role;
 
 import java.io.Serializable;
 import java.util.Set;
+
 @Data
 public class UserResponseDto implements Serializable {
 
@@ -14,6 +15,6 @@ public class UserResponseDto implements Serializable {
 
     private String login;
 
-	  private Set<Role> roles;
+    private Set<Role> roles;
 
 }

@@ -11,11 +11,11 @@ public class UserChangePasswordDto {
     private String email;
     private String oldPassword;
 
-    @NotBlank(message = "Password must not be null!", 
-              groups = {OnCreate.class, OnPasswordUpdate.class})
+    @NotBlank(message = "Password must not be null!",
+            groups = {OnCreate.class, OnPasswordUpdate.class})
     @Length(message = "Password must be at least 8 symbols long!", min = 8,
-        groups = {OnCreate.class, OnPasswordUpdate.class})
+            groups = {OnCreate.class, OnPasswordUpdate.class})
     @Length(message = "Password must be less than 255 symbols long!", max = 255,
-        groups = {OnCreate.class, OnPasswordUpdate.class})
+            groups = {OnCreate.class, OnPasswordUpdate.class})
     private String newPassword;
 }

@@ -58,7 +58,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-//        @Caching(cacheable = {@Cacheable(value = "UserService::getById", key = "#user.id"),     @Cacheable(value = "UserService::getByUsername", key = "#user.username")})
+//  @Caching(cacheable = {@Cacheable(
+//  value = "UserService::getById", key = "#user.id"),
+//  @Cacheable(value = "UserService::getByUsername", key = "#user.username")})
     // TODO
     public UserResponseDto create(final UserRequestDto userRequestDto) {
         try {
@@ -71,7 +73,8 @@ public class UserServiceImpl implements UserService {
             if (!userRequestDto.isPasswordConfirmed()) {
                 throw new IllegalArgumentException("Пароли не равны ");
             }
-            User user = userRepository.save(userAuthMapper.mapToEntity(userRequestDto));
+            User user = userRepository.save(
+                    userAuthMapper.mapToEntity(userRequestDto));
             return userAuthMapper.mapToDTO(user);
         } catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException(
