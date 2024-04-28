@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,8 @@ import ru.alliedar.pokaznoi.web.dto.auth.UserRequestDto;
 import ru.alliedar.pokaznoi.web.dto.auth.UserLoginRequestDto;
 import ru.alliedar.pokaznoi.web.dto.auth.UserResponseDto;
 import ru.alliedar.pokaznoi.web.dto.auth.UserResetPasswordDto;
+import ru.alliedar.pokaznoi.web.dto.validation.OnCreate;
+import ru.alliedar.pokaznoi.web.dto.validation.OnPasswordUpdate;
 import ru.alliedar.pokaznoi.web.mappers.UserAuthMapper;
 
 import java.util.UUID;
@@ -42,7 +45,7 @@ public class AuthController {
 //        User newUser = userService.create(user);
 //        System.out.println("KALLL");
 //        return new ResponseEntity<>(newUser,
-//        HttpStatus.CREATED); // TODO GAVNO YBRAT
+//        HttpStatus.CREATED);
 //    }
 //    @PostMapping("/register")
 //    public UserDto register(@Validated(OnCreate.class)
@@ -54,6 +57,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> registerUser(
+            @Validated(OnCreate.class)
             final @RequestBody UserRequestDto userRequestDto) {
         UserResponseDto newUser = userService.create(userRequestDto);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
@@ -109,6 +113,7 @@ public class AuthController {
 
     @PostMapping("/resetPassword")
     public ResponseEntity<String> resetPassword(
+            @Validated(OnPasswordUpdate.class)
             final @RequestBody UserResetPasswordDto userResetPasswordDto) {
         if (authService.resetPassword(userResetPasswordDto)) {
             return ResponseEntity.ok("Пароль успешно сброшен");
@@ -123,6 +128,7 @@ public class AuthController {
             final @CookieValue(name = "sessionId") String sessionId,
             final HttpServletRequest request,
             final HttpServletResponse response,
+            @Validated(OnPasswordUpdate.class)
             final @RequestBody UserChangePasswordDto userChangePasswordDto) {
         try {
             Boolean exists = stringRedisTemplate.hasKey(sessionId);
