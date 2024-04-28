@@ -66,6 +66,9 @@ public class UserServiceImpl implements UserService {
                 throw new IllegalArgumentException("Пользователь с логином "
                         + userRequestDto.getLogin() + " уже существует.");
             }
+            if (!userRequestDto.isPasswordConfirmed()) {
+                throw new IllegalArgumentException("Пароли не равны ");
+            }
             User user = userRepository.save(userAuthMapper.mapToEntity(userRequestDto));
             return userAuthMapper.mapToDTO(user);
         } catch (DataIntegrityViolationException e) {
