@@ -8,7 +8,16 @@ volumes:
     driver: local
 
 services:
-  app:
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    depends_on:
+      - backend
+    ports:
+      - '80:3000'
+
+  backend:
     build:
       context: .
     container_name: tasklist
