@@ -33,7 +33,7 @@ public class ClientServiceImpl implements ClientService {
 			throw new IllegalArgumentException("Пользователь с номером "
 					+ clientDto.getMobileNumber() + " уже существует.");
 		}
-		LocalDateTime localDateTime = LocalDateTime.now(ZoneId.systemDefault());
+		LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("GMT+6"));
 
 // Создание объекта Timestamp из LocalDateTime
 		Timestamp timestamp = Timestamp.valueOf(localDateTime);
