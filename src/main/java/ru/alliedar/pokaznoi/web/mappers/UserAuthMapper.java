@@ -13,25 +13,25 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class UserAuthMapper {
-    private final PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
-    public UserResponseDto mapToDTO(final User user) {
-        UserResponseDto userResponseDto = new UserResponseDto();
-        userResponseDto.setId(user.getId());
-        userResponseDto.setEmail(user.getUsername());
-        userResponseDto.setLogin(user.getName());
-        userResponseDto.setRoles(user.getRoles());
-        return userResponseDto;
-    }
+	public UserResponseDto mapToDTO(final User user) {
+		UserResponseDto userResponseDto = new UserResponseDto();
+		userResponseDto.setId(user.getId());
+		userResponseDto.setEmail(user.getUsername());
+		userResponseDto.setLogin(user.getName());
+		userResponseDto.setRoles(user.getRoles());
+		return userResponseDto;
+	}
 
-    public User mapToEntity(final UserRequestDto requestDto) {
-        User user = new User();
-        user.setId(requestDto.getId());
-        user.setUsername(requestDto.getEmail());
-        user.setName(requestDto.getLogin());
-        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-        Set<Role> role = Set.of(Role.ROLE_USER);
-        user.setRoles(role);
-        return user;
-    }
+	public User mapToEntity(final UserRequestDto requestDto) {
+		User user = new User();
+		user.setId(requestDto.getId());
+		user.setUsername(requestDto.getEmail());
+		user.setName(requestDto.getLogin());
+		user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+		Set<Role> role = Set.of(Role.ROLE_USER);
+		user.setRoles(role);
+		return user;
+	}
 }

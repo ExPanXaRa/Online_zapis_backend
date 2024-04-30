@@ -34,20 +34,20 @@ import ru.alliedar.pokaznoi.web.security.CookieAuthFilter;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final StringRedisTemplate stringRedisTemplate;
-    private final ApplicationContext applicationContext;
-    private final MinioProperties minioProperties;
+	private final StringRedisTemplate stringRedisTemplate;
+	private final ApplicationContext applicationContext;
+	private final MinioProperties minioProperties;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            final AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(
+			final AuthenticationConfiguration configuration) throws Exception {
+		return configuration.getAuthenticationManager();
+	}
 
 //    @Bean // для втрого способа кастомных секьюрити экспешенов
 //    public MethodSecurityExpressionHandler expressionHandler() {
@@ -57,59 +57,60 @@ public class ApplicationConfig {
 //        return expressionHandler;
 //    }
 
-    @Bean
-    public MinioClient minioClient() {
-        return MinioClient.builder()
-                .endpoint(minioProperties.getUrl())
-                .credentials(minioProperties.getAccessKey(),
-                        minioProperties.getSecretKey())
-                .build();
-    }
+	@Bean
+	public MinioClient minioClient() {
+		return MinioClient.builder()
+				.endpoint(minioProperties.getUrl())
+				.credentials(minioProperties.getAccessKey(),
+						minioProperties.getSecretKey())
+				.build();
+	}
 
-    @Bean
-    public OpenAPI openAPI() {
-        return new OpenAPI()
-                .addSecurityItem(new SecurityRequirement()
-                        .addList("bearerAuth"))
-                .components(
-                        new Components()
-                                .addSecuritySchemes(
-                                        "bearerAuth", new SecurityScheme()
-                                                .type(SecurityScheme.Type.HTTP)
-                                                .scheme("bearer")
-                                                .bearerFormat("JWT")
-                                )
-                )
-                .info(new Info()
-                        .title("Task list API")
-                        .description("Demo Spring Boot application")
-                        .version("1.0")
-                );
-    }
+	@Bean
+	public OpenAPI openAPI() {
+		return new OpenAPI()
+				.addSecurityItem(new SecurityRequirement()
+						.addList("bearerAuth"))
+				.components(
+						new Components()
+								.addSecuritySchemes(
+										"bearerAuth", new SecurityScheme()
+												.type(SecurityScheme.Type.HTTP)
+												.scheme("bearer")
+												.bearerFormat("JWT")
+								)
+				)
+				.info(new Info()
+						.title("Task list API")
+						.description("Demo Spring Boot application")
+						.version("1.0")
+				);
+	}
 
-    @Bean
-    public SecurityFilterChain filterChain(final HttpSecurity http)
-            throws Exception {
-        return http
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(sessionManagement ->
-                        sessionManagement
-                                .sessionCreationPolicy(
-                                        SessionCreationPolicy.STATELESS
-                                )
-                )
-                .authorizeHttpRequests((authz) ->
-                        authz
-                                .requestMatchers("/auth/register",
-                                        "/auth/login", "/auth/resetPassword")
-                                .permitAll()
-                                .anyRequest().authenticated()
-                )
-                .addFilterBefore(new CookieAuthFilter(stringRedisTemplate),
-                        UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }
+	@Bean
+	public SecurityFilterChain filterChain(final HttpSecurity http)
+			throws Exception {
+		return http
+				.httpBasic(AbstractHttpConfigurer::disable)
+				.cors(Customizer.withDefaults())
+				.csrf(AbstractHttpConfigurer::disable)
+				.sessionManagement(sessionManagement ->
+						sessionManagement
+								.sessionCreationPolicy(
+										SessionCreationPolicy.STATELESS
+								)
+				)
+				.authorizeHttpRequests((authz) ->
+						authz
+								.requestMatchers("/auth/register",
+										"/auth/login", "/auth/resetPassword"
+								,"/clients/register")
+								.permitAll()
+								.anyRequest().authenticated()
+				)
+				.addFilterBefore(new CookieAuthFilter(stringRedisTemplate),
+						UsernamePasswordAuthenticationFilter.class)
+				.build();
+	}
 
 }

@@ -27,26 +27,26 @@ import java.util.Set;
 @Data
 public class User implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String name;
-    private String username;
-    private String password;
+	private String name;
+	private String username;
+	private String password;
 
-    @Transient
-    private String passwordConfirmation;
+	@Transient
+	private String passwordConfirmation;
 
-    @Column(name = "role")
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "users_roles")
-    @Enumerated(value = EnumType.STRING)
-    private Set<Role> roles;
+	@Column(name = "role")
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "users_roles")
+	@Enumerated(value = EnumType.STRING)
+	private Set<Role> roles;
 
-    @CollectionTable(name = "users_task")
-    @OneToMany
-    @JoinColumn(name = "task_id")
-    private List<Task> tasks;
+	@CollectionTable(name = "users_task")
+	@OneToMany
+	@JoinColumn(name = "task_id")
+	private List<Task> tasks;
 
 }

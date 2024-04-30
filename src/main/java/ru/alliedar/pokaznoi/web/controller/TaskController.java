@@ -31,45 +31,45 @@ import ru.alliedar.pokaznoi.web.mappers.TaskMapper;
 @Tag(name = "Task Controller", description = "Task API") // для сваггера
 public class TaskController {
 
-    private final TaskService taskService;
+	private final TaskService taskService;
 
-    private final TaskMapper taskMapper;
-    private final TaskImageMapper taskImageMapper;
+	private final TaskMapper taskMapper;
+	private final TaskImageMapper taskImageMapper;
 
-    @PutMapping
-    @Operation(summary = "Update task") // для сваггера
-    @PreAuthorize("canAccessTask(#dto.id)")
-    public TaskDto update(
-            final @Validated(OnUpdate.class) @RequestBody TaskDto dto) {
-        Task task = taskMapper.toEntity(dto);
-        Task updatedTask = taskService.update(task);
-        return taskMapper.toDto(updatedTask);
-    }
+	@PutMapping
+	@Operation(summary = "Update task") // для сваггера
+	@PreAuthorize("canAccessTask(#dto.id)")
+	public TaskDto update(
+			final @Validated(OnUpdate.class) @RequestBody TaskDto dto) {
+		Task task = taskMapper.toEntity(dto);
+		Task updatedTask = taskService.update(task);
+		return taskMapper.toDto(updatedTask);
+	}
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get task by ID") // для сваггера
-    @PreAuthorize("canAccessTask(#id)")
-    public TaskDto getById(final @PathVariable Long id) {
-        Task task = taskService.getById(id);
-        return taskMapper.toDto(task);
-    }
+	@GetMapping("/{id}")
+	@Operation(summary = "Get task by ID") // для сваггера
+	@PreAuthorize("canAccessTask(#id)")
+	public TaskDto getById(final @PathVariable Long id) {
+		Task task = taskService.getById(id);
+		return taskMapper.toDto(task);
+	}
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete task by ID") // для сваггера
-    @PreAuthorize("canAccessTask(#id)")
-    public void deleteById(final @PathVariable Long id) {
-        taskService.delete(id);
-    }
+	@DeleteMapping("/{id}")
+	@Operation(summary = "Delete task by ID") // для сваггера
+	@PreAuthorize("canAccessTask(#id)")
+	public void deleteById(final @PathVariable Long id) {
+		taskService.delete(id);
+	}
 
 
-    @PostMapping("/{id}/image")
-    @Operation(summary = "Upload image to task")
-    @PreAuthorize("canAccessTask(#id)")
-    public void uploadImage(final @PathVariable Long id,
-                            final @Validated
-                            @ModelAttribute TaskImageDto imageDto) {
-        TaskImage image = taskImageMapper.toEntity(imageDto);
-        taskService.uploadImage(id, image);
-    }
+	@PostMapping("/{id}/image")
+	@Operation(summary = "Upload image to task")
+	@PreAuthorize("canAccessTask(#id)")
+	public void uploadImage(final @PathVariable Long id,
+							final @Validated
+							@ModelAttribute TaskImageDto imageDto) {
+		TaskImage image = taskImageMapper.toEntity(imageDto);
+		taskService.uploadImage(id, image);
+	}
 
 }

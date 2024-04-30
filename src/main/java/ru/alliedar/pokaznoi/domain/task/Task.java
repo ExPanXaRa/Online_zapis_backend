@@ -24,21 +24,21 @@ import java.util.List;
 @Data
 public class Task implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String title;
-    private String description;
+	private String title;
+	private String description;
 
-    @Enumerated(value = EnumType.STRING)
+	@Enumerated(value = EnumType.STRING)
 
-    private Status status;
+	private Status status;
 
-    private LocalDateTime expirationDate;
+	private LocalDateTime expirationDate;
 
-    @Column(name = "image")
-    @CollectionTable(name = "task_images")
-    @ElementCollection
-    private List<String> images;
+	@Column(name = "image")
+	@CollectionTable(name = "task_images")
+	@ElementCollection
+	private List<String> images;
 }

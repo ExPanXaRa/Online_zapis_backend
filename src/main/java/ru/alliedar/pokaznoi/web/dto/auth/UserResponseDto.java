@@ -9,12 +9,12 @@ import java.util.Set;
 @Data
 public class UserResponseDto implements Serializable {
 
-    private Long id;
+	private Long id;
 
-    private String email;
+	private String email;
 
-    private String login;
+	private String login;
 
-    private Set<Role> roles;
+	private Set<Role> roles;
 
 }

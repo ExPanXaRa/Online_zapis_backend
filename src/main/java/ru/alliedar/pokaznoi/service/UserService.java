@@ -6,16 +6,16 @@ import ru.alliedar.pokaznoi.web.dto.auth.UserResponseDto;
 
 public interface UserService {
 
-    User getById(Long id);
+	User getById(Long id);
 
-    User getByUsername(String username);
+	User getByUsername(String username);
 
-    User update(User user);
+	User update(User user);
 
-    UserResponseDto create(UserRequestDto user);
+	UserResponseDto create(UserRequestDto user);
 
-    boolean isTaskOwner(Long userId, Long taskId);
+	boolean isTaskOwner(Long userId, Long taskId);
 
-    void delete(Long id);
+	void delete(Long id);
 
 }

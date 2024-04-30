@@ -31,12 +31,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
-    private final UserService userService;
-    private final StringRedisTemplate stringRedisTemplate;
-    private final UserAuthMapper userAuthMapper;
+	private final AuthService authService;
+	private final UserService userService;
+	private final StringRedisTemplate stringRedisTemplate;
+	private final UserAuthMapper userAuthMapper;
 
-    //    @PostMapping("/register")
+	//    @PostMapping("/register")
 //    public ResponseEntity<User> registerUser(
 //    @RequestBody UserRequestDto userRequestDto) {
 //        System.out.println("RAK");
@@ -55,13 +55,12 @@ public class AuthController {
 //        return userMapper.toDto(createdUser);
 //    }
 
-    @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> registerUser(
-            @Validated(OnCreate.class)
-            final @RequestBody UserRequestDto userRequestDto) {
-        UserResponseDto newUser = userService.create(userRequestDto);
-        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
-    }
+	@PostMapping("/register")
+	public ResponseEntity<UserResponseDto> registerUser(
+			@Validated(OnCreate.class) final @RequestBody UserRequestDto userRequestDto) {
+		UserResponseDto newUser = userService.create(userRequestDto);
+		return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+	}
 //    @PostMapping("/register")
 //    public ResponseEntity<UserResponseDto> register(@Validated(OnCreate.class)
 //    @RequestBody UserRequestDto userRequestDto) {
@@ -71,85 +70,83 @@ public class AuthController {
 //        HttpStatus.CREATED);
 //    }
 
-    @PostMapping("/login")
-    public ResponseEntity<UserResponseDto> loginUser(
-            final @RequestBody UserLoginRequestDto userLoginRequestDto,
-            final HttpServletResponse response,
-            final HttpServletRequest request) {
-        try {
-            UserResponseDto user = authService.login(userLoginRequestDto);
-            String key = UUID.randomUUID().toString();
+	@PostMapping("/login")
+	public ResponseEntity<UserResponseDto> loginUser(
+			final @RequestBody UserLoginRequestDto userLoginRequestDto,
+			final HttpServletResponse response,
+			final HttpServletRequest request) {
+		try {
+			UserResponseDto user = authService.login(userLoginRequestDto);
+			String key = UUID.randomUUID().toString();
 
-            stringRedisTemplate.opsForValue()
-                    .set(key, String.valueOf(user.getId()));
+			stringRedisTemplate.opsForValue()
+					.set(key, String.valueOf(user.getId()));
 
-            Cookie cookie = new Cookie("sessionId", key);
-            cookie.setPath("/");
-            cookie.setMaxAge(15 * 24 * 60 * 60);
-            response.addCookie(cookie);
-            return ResponseEntity.ok(user);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-    }
+			Cookie cookie = new Cookie("sessionId", key);
+			cookie.setPath("/");
+			cookie.setMaxAge(15 * 24 * 60 * 60);
+			response.addCookie(cookie);
+			return ResponseEntity.ok(user);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+	}
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser(
-            final @CookieValue(name = "sessionId") String sessionId,
-            final HttpServletResponse response) {
-        Boolean exists = stringRedisTemplate.hasKey(sessionId);
+	@PostMapping("/logout")
+	public ResponseEntity<?> logoutUser(
+			final @CookieValue(name = "sessionId") String sessionId,
+			final HttpServletResponse response) {
+		Boolean exists = stringRedisTemplate.hasKey(sessionId);
 
-        if (exists != null && exists) {
-            stringRedisTemplate.delete(sessionId);
-            Cookie cookie = new Cookie("sessionId", null);
-            cookie.setPath("/");
-            cookie.setMaxAge(0);
-            response.addCookie(cookie);
-            return ResponseEntity.ok(HttpStatus.OK); // TODO удалят куки
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
+		if (exists != null && exists) {
+			stringRedisTemplate.delete(sessionId);
+			Cookie cookie = new Cookie("sessionId", null);
+			cookie.setPath("/");
+			cookie.setMaxAge(0);
+			response.addCookie(cookie);
+			return ResponseEntity.ok(HttpStatus.OK); // TODO удалят куки
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+	}
 
-    @PostMapping("/resetPassword")
-    public ResponseEntity<String> resetPassword(
-            @Validated(OnPasswordUpdate.class)
-            final @RequestBody UserResetPasswordDto userResetPasswordDto) {
-        if (authService.resetPassword(userResetPasswordDto)) {
-            return ResponseEntity.ok("Пароль успешно сброшен");
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                "Пользователь с указанным адресом электронной почты не найден");
+	@PostMapping("/resetPassword")
+	public ResponseEntity<String> resetPassword(
+			@Validated(OnPasswordUpdate.class) final @RequestBody UserResetPasswordDto userResetPasswordDto) {
+		if (authService.resetPassword(userResetPasswordDto)) {
+			return ResponseEntity.ok("Пароль успешно сброшен");
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+				"Пользователь с указанным адресом электронной почты не найден");
 
-    }
+	}
 
-    @PostMapping("/changePassword")
-    public ResponseEntity<String> changePassword(
-            final @CookieValue(name = "sessionId") String sessionId,
-            final HttpServletRequest request,
-            final HttpServletResponse response,
-            @Validated(OnPasswordUpdate.class)
-            final @RequestBody UserChangePasswordDto userChangePasswordDto) {
-        try {
-            Boolean exists = stringRedisTemplate.hasKey(sessionId);
+	@PostMapping("/changePassword")
+	public ResponseEntity<String> changePassword(
+			final @CookieValue(name = "sessionId") String sessionId,
+			final HttpServletRequest request,
+			final HttpServletResponse response,
+			@Validated(OnPasswordUpdate.class) final @RequestBody UserChangePasswordDto userChangePasswordDto) {
+		try {
+			Boolean exists = stringRedisTemplate.hasKey(sessionId);
 
-            if (exists != null && exists) {
-                if (authService.changePassword(userChangePasswordDto)) {
-                    return ResponseEntity.ok("Пароль успешно изменен");
-                } else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                            "Пользователь с указанным адресом электронной"
-                                    + "почты не найден");
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                        "Недействительная сессия");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Произошла ошибка при изменении пароля: "
-                            + e.getMessage());
-        }
-    }
+			if (exists != null && exists) {
+				if (authService.changePassword(userChangePasswordDto)) {
+					return ResponseEntity.ok("Пароль успешно изменен");
+				} else {
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+							"Пользователь с указанным адресом электронной"
+									+ "почты не найден");
+				}
+			} else {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+						"Недействительная сессия");
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Произошла ошибка при изменении пароля: "
+							+ e.getMessage());
+		}
+	}
 
 }

@@ -11,14 +11,14 @@ import ru.alliedar.pokaznoi.repository.UserRepository;
 @RequiredArgsConstructor
 public class CookieUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
-    @Override
-    @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(final String login) {
-        return (UserDetails) userRepository.findByUsername(login)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "User with email:" + login + " not found."));
-    }
+	@Override
+	@Transactional(readOnly = true)
+	public UserDetails loadUserByUsername(final String login) {
+		return (UserDetails) userRepository.findByUsername(login)
+				.orElseThrow(() -> new IllegalArgumentException(
+						"User with email:" + login + " not found."));
+	}
 
 }

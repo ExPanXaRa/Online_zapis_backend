@@ -13,48 +13,48 @@ import ru.alliedar.pokaznoi.service.UserService;
 @RequiredArgsConstructor
 public class CustomSecurityExpression {
 
-    private final UserService userService;
-    private final StringRedisTemplate stringRedisTemplate;
+	private final UserService userService;
+	private final StringRedisTemplate stringRedisTemplate;
 
-    public boolean canAccessUser(final Long id) {
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-        Long userId = -1L;
-        String key = (String) authentication.getPrincipal();
-        String value = stringRedisTemplate.opsForValue().get(key);
+	public boolean canAccessUser(final Long id) {
+		Authentication authentication =
+				SecurityContextHolder.getContext().getAuthentication();
+		Long userId = -1L;
+		String key = (String) authentication.getPrincipal();
+		String value = stringRedisTemplate.opsForValue().get(key);
 
-        if (value != null) {
-            userId = Long.parseLong(value);
-        }
+		if (value != null) {
+			userId = Long.parseLong(value);
+		}
 
-        return userId.equals(id) || hasAnyRole(authentication, Role.ROLE_ADMIN);
-    }
+		return userId.equals(id) || hasAnyRole(authentication, Role.ROLE_ADMIN);
+	}
 
-    private boolean hasAnyRole(final Authentication authentication,
-                               final Role... roles) {
-        for (Role role : roles) {
-            SimpleGrantedAuthority authority =
-                    new SimpleGrantedAuthority((role.name()));
-            if (authentication.getAuthorities().contains(authority)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	private boolean hasAnyRole(final Authentication authentication,
+							   final Role... roles) {
+		for (Role role : roles) {
+			SimpleGrantedAuthority authority =
+					new SimpleGrantedAuthority((role.name()));
+			if (authentication.getAuthorities().contains(authority)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-    public boolean canAccessTask(final Long taskId) {
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
+	public boolean canAccessTask(final Long taskId) {
+		Authentication authentication =
+				SecurityContextHolder.getContext().getAuthentication();
 
-        long userId = -1L;
-        String key = (String) authentication.getPrincipal();
-        String value = stringRedisTemplate.opsForValue().get(key);
+		long userId = -1L;
+		String key = (String) authentication.getPrincipal();
+		String value = stringRedisTemplate.opsForValue().get(key);
 
-        if (value != null) {
-            userId = Long.parseLong(value);
-        }
+		if (value != null) {
+			userId = Long.parseLong(value);
+		}
 
-        return userService.isTaskOwner(userId, taskId);
-    }
+		return userService.isTaskOwner(userId, taskId);
+	}
 
 }

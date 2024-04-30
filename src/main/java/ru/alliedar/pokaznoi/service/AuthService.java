@@ -7,9 +7,9 @@ import ru.alliedar.pokaznoi.web.dto.auth.UserResponseDto;
 
 public interface AuthService {
 
-    UserResponseDto login(UserLoginRequestDto userLoginRequestDto);
+	UserResponseDto login(UserLoginRequestDto userLoginRequestDto);
 
-    boolean resetPassword(UserResetPasswordDto userResetPasswordDto);
+	boolean resetPassword(UserResetPasswordDto userResetPasswordDto);
 
-    boolean changePassword(UserChangePasswordDto userChangePasswordDto);
+	boolean changePassword(UserChangePasswordDto userChangePasswordDto);
 }
