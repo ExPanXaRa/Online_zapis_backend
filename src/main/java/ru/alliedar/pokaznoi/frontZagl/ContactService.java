@@ -1,7 +1,5 @@
 package ru.alliedar.pokaznoi.frontZagl;
 
-import ru.alliedar.pokaznoi.frontZagl.Contact;
-import ru.alliedar.pokaznoi.frontZagl.ContactRepo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,23 +27,25 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class ContactService {
     private final ContactRepo contactRepo;
 
-    public Page<Contact> getAllContacts(int page, int size) {
-        return contactRepo.findAll(PageRequest.of(page, size, Sort.by("name")));
+    public Page<Contact> getAllContacts(final int page, final  int size) {
+        return contactRepo.findAll(PageRequest.of(page, size,
+                Sort.by("name")));
     }
 
-    public Contact getContact(String id) {
-        return contactRepo.findById(id).orElseThrow(() -> new RuntimeException("Contact not found"));
+    public Contact getContact(final String id) {
+        return contactRepo.findById(id).orElseThrow(() ->
+                new RuntimeException("Contact not found"));
     }
 
-    public Contact createContact(Contact contact) {
+    public Contact createContact(final Contact contact) {
         return contactRepo.save(contact);
     }
 
-    public void deleteContact(Contact contact) {
+    public void deleteContact(final Contact contact) {
         // Assignment
     }
 
-    public String uploadPhoto(String id, MultipartFile file) {
+    public String uploadPhoto(final String id, final MultipartFile file) {
         log.info("Saving picture for user ID: {}", id);
         Contact contact = getContact(id);
         String photoUrl = photoFunction.apply(id, file);
@@ -54,19 +54,27 @@ public class ContactService {
         return photoUrl;
     }
 
-    private final Function<String, String> fileExtension = filename -> Optional.of(filename).filter(name -> name.contains("."))
-            .map(name -> "." + name.substring(filename.lastIndexOf(".") + 1)).orElse(".png");
+    private final Function<String, String> fileExtension = filename ->
+            Optional.of(filename).filter(name -> name.contains("."))
+            .map(name -> "." + name.substring(
+                    filename.lastIndexOf(".") + 1)).orElse(".png");
 
-    private final BiFunction<String, MultipartFile, String> photoFunction = (id, image) -> {
-        String filename = id + fileExtension.apply(image.getOriginalFilename());
+    private final BiFunction<String, MultipartFile, String> photoFunction =
+            (id, image) -> {
+        String filename = id
+                    + fileExtension.apply(image.getOriginalFilename());
         try {
-            Path fileStorageLocation = Paths.get(PHOTO_DIRECTORY).toAbsolutePath().normalize();
-            if(!Files.exists(fileStorageLocation)) { Files.createDirectories(fileStorageLocation); }
-            Files.copy(image.getInputStream(), fileStorageLocation.resolve(filename), REPLACE_EXISTING);
+            Path fileStorageLocation = Paths.get(PHOTO_DIRECTORY)
+                    .toAbsolutePath().normalize();
+            if (!Files.exists(fileStorageLocation)) {
+                Files.createDirectories(fileStorageLocation);
+            }
+            Files.copy(image.getInputStream(),
+                    fileStorageLocation.resolve(filename), REPLACE_EXISTING);
             return ServletUriComponentsBuilder
                     .fromCurrentContextPath()
                     .path("/contacts/image/" + filename).toUriString();
-        }catch (Exception exception) {
+        } catch (Exception exception) {
             throw new RuntimeException("Unable to save image");
         }
     };
