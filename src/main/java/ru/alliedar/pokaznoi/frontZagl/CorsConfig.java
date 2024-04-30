@@ -34,7 +34,8 @@ public class CorsConfig {
         var corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedOrigins(List.of(
-                "http://localhost:3000", "http://localhost:4200"));
+                "http://localhost:3000", "http://localhost:4200",
+		"http://frontend:3000", "http://frontend:4200"));
         corsConfiguration.setAllowedHeaders(List.of(
                 ORIGIN, ACCESS_CONTROL_ALLOW_ORIGIN, CONTENT_TYPE, ACCEPT,
                 AUTHORIZATION, X_REQUESTED_WITH, ACCESS_CONTROL_REQUEST_METHOD,
