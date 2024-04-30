@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.alliedar.pokaznoi.domain.client.Client;
+import ru.alliedar.pokaznoi.domain.exception.ResourceNotFoundException;
 import ru.alliedar.pokaznoi.repository.ClientRepository;
 import ru.alliedar.pokaznoi.service.ClientService;
 import ru.alliedar.pokaznoi.web.dto.client.ClientRequestDto;
@@ -22,6 +23,15 @@ public class ClientServiceImpl implements ClientService {
 	private final ClientRepository clientRepository;
 	private final ClientResponseMapper clientResponseMapper;
 	private final ClientRequestMapper clientRequestMapper;
+
+
+	@Override
+	@Transactional
+	public Client getById(Long id) {
+		return clientRepository.findById(id)
+				.orElseThrow(() ->
+						new ResourceNotFoundException("Client not found"));
+	}
 
 	@Override
 	@Transactional
