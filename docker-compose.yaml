@@ -12,10 +12,10 @@ services:
     build:
       context: ./frontend
     container_name: frontend
-#    depends_on:
-#      - backend
+    depends_on:
+      - backend
     ports:
-      - '3000:3000'
+      - '80:3000'
 
   backend:
     build:
@@ -31,7 +31,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/tasklist?currentSchema=tasklist
       SPRING_DATA_REDIS_HOST: redis
     ports:
-      - '8080:8080'
+      - '8081:8080'
 
   db:
     image: postgres:15.1-alpine
