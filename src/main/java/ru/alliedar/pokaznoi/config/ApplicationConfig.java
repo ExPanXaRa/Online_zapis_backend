@@ -103,7 +103,8 @@ public class ApplicationConfig {
                 .authorizeHttpRequests((authz) ->
                         authz
                                 .requestMatchers("/auth/register",
-                                        "/auth/login", "/auth/resetPassword")
+                                        "/auth/login", "/auth/resetPassword",
+                                        "/contacts/**")
                                 .permitAll()
                                 .anyRequest().authenticated()
                 )
