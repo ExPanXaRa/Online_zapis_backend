@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:8081/contacts';
+const API_URL = 'http://176.109.105.250:8081/contacts';
 
 export async function saveContact(contact) {
     return await axios.post(API_URL, contact);
