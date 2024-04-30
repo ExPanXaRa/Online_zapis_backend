@@ -11,6 +11,9 @@ import ru.alliedar.pokaznoi.web.dto.client.ClientResponseDto;
 import ru.alliedar.pokaznoi.web.mappers.ClientRequestMapper;
 import ru.alliedar.pokaznoi.web.mappers.ClientResponseMapper;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @Service
@@ -30,6 +33,13 @@ public class ClientServiceImpl implements ClientService {
 			throw new IllegalArgumentException("Пользователь с номером "
 					+ clientDto.getMobileNumber() + " уже существует.");
 		}
+		LocalDateTime localDateTime = LocalDateTime.now(ZoneId.systemDefault());
+
+// Создание объекта Timestamp из LocalDateTime
+		Timestamp timestamp = Timestamp.valueOf(localDateTime);
+
+// Установка созданного Timestamp в ваш объект clientRequestDto
+		clientDto.setCreatedAt(timestamp);
 //				if (!userRequestDto.isPasswordConfirmed()) {
 //					throw new IllegalArgumentException("Пароли не равны ");
 //				}

@@ -15,6 +15,8 @@ import ru.alliedar.pokaznoi.web.dto.client.ClientRequestDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientResponseDto;
 import ru.alliedar.pokaznoi.web.dto.validation.OnCreate;
 
+import java.sql.Timestamp;
+
 @RestController
 @RequestMapping("/clients")
 @RequiredArgsConstructor
