@@ -58,5 +58,5 @@ public class Client {
 			joinColumns = @JoinColumn(name = "client_id"),
 			inverseJoinColumns = @JoinColumn(name = "sale_card_id")
 	)
-	private Set<SaleCard> saleCards;
+	private List<SaleCard> saleCards;
 }

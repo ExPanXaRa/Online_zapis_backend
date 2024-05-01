@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.alliedar.pokaznoi.domain.client.Client;
+import ru.alliedar.pokaznoi.domain.toolsOfMaster.SaleCard;
+import ru.alliedar.pokaznoi.repository.SaleCardRepository;
 import ru.alliedar.pokaznoi.service.ClientService;
 import ru.alliedar.pokaznoi.web.dto.auth.UserRequestDto;
 import ru.alliedar.pokaznoi.web.dto.auth.UserResponseDto;
@@ -21,13 +23,14 @@ import ru.alliedar.pokaznoi.web.mappers.ClientRequestMapper;
 import ru.alliedar.pokaznoi.web.mappers.ClientResponseMapper;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @RestController
 @RequestMapping("/clients")
 @RequiredArgsConstructor
 public class ClientController {
 	private final ClientService clientService;
-	private final ClientResponseMapper clientResponseMapper;
+	private final SaleCardRepository saleCardRepository;
 
 	@PostMapping("/register")
 	public ResponseEntity<ClientResponseDto> registerClient(
@@ -40,5 +43,11 @@ public class ClientController {
 	public ResponseEntity<Client> getById(@PathVariable Long id) {
 		Client client = clientService.getById(id);
 		return new ResponseEntity<>(client, HttpStatus.OK);
+	}
+
+	@GetMapping("/a")
+	public List<SaleCard> getSaleCards() {
+		List<SaleCard> card = saleCardRepository.findAll();
+		return card;
 	}
 }

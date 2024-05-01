@@ -14,6 +14,7 @@ import ru.alliedar.pokaznoi.domain.client.Client;
 import ru.alliedar.pokaznoi.domain.master.Master;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,7 +37,7 @@ public class SaleCard {
 	private BigDecimal percent;
 
 	@ManyToMany(mappedBy = "saleCards")
-	private Set<Client> clients;
+	private List<Client> clients;
 }
 
 
