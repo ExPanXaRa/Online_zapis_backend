@@ -104,7 +104,8 @@ public class ApplicationConfig {
 						authz
 								.requestMatchers("/auth/register",
 										"/auth/login", "/auth/resetPassword"
-								,"/clients/register", "/clients/**")
+								,"/clients/register", "/clients/**",
+										"/api/v1/users/**")
 								.permitAll()
 								.anyRequest().authenticated()
 				)

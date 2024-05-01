@@ -52,9 +52,9 @@ public class UserController {
 	@GetMapping("/{id}")
 	@Operation(summary = "Get userDto by ID") // для сваггера
 	@PreAuthorize("@customSecurityExpression.canAccessUser(#id)")
-	public UserDto getById(final @PathVariable Long id) {
+	public User getById(final @PathVariable Long id) {
 		User user = userService.getById(id);
-		return userMapper.toDto(user);
+		return user;
 	}
 
 	@DeleteMapping("/{id}")
