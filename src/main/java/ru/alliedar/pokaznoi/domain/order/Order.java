@@ -6,14 +6,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import ru.alliedar.pokaznoi.domain.client.Client;
 import ru.alliedar.pokaznoi.domain.master.Master;
+import ru.alliedar.pokaznoi.domain.service.Service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Data
@@ -46,5 +50,9 @@ public class Order {
 
 	@Column(name = "rating")
 	private Integer rating;
+
+	@ManyToMany
+	@JoinTable(name = "orders_services")
+	List<Service> services;
 }
 

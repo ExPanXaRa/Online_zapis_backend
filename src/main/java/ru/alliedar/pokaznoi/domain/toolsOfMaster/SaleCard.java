@@ -1,5 +1,9 @@
 package ru.alliedar.pokaznoi.domain.toolsOfMaster;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,6 +41,7 @@ public class SaleCard {
 	private BigDecimal percent;
 
 	@ManyToMany(mappedBy = "saleCards")
+	@JsonIgnoreProperties("saleCards")
 	private List<Client> clients;
 }
 

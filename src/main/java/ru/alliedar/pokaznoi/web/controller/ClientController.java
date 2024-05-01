@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.alliedar.pokaznoi.domain.client.Client;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.SaleCard;
+import ru.alliedar.pokaznoi.repository.ClientRepository;
 import ru.alliedar.pokaznoi.repository.SaleCardRepository;
 import ru.alliedar.pokaznoi.service.ClientService;
 import ru.alliedar.pokaznoi.web.dto.auth.UserRequestDto;
@@ -31,6 +32,7 @@ import java.util.List;
 public class ClientController {
 	private final ClientService clientService;
 	private final SaleCardRepository saleCardRepository;
+	private final ClientRepository clientRepository;
 
 	@PostMapping("/register")
 	public ResponseEntity<ClientResponseDto> registerClient(
@@ -49,5 +51,10 @@ public class ClientController {
 	public List<SaleCard> getSaleCards() {
 		List<SaleCard> card = saleCardRepository.findAll();
 		return card;
+	}
+	@GetMapping("/b")
+	public List<Client> getClient() {
+		List<Client> client = clientRepository.findAll();
+		return client;
 	}
 }
