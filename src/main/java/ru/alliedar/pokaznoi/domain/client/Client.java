@@ -66,6 +66,7 @@ public class Client {
 	@JsonIgnoreProperties("clients")
 	private List<SaleCard> saleCards;
 
-//	@OneToMany(mappedBy = "client")
-//	private List<Order> orders;
+	@OneToMany(mappedBy = "client")
+	@JsonIgnoreProperties("client")
+	private List<Order> orders;
 }

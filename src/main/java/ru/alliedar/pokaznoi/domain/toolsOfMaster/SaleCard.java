@@ -32,6 +32,7 @@ public class SaleCard {
 
 	@ManyToOne
 	@JoinColumn(name = "master_id", nullable = false)
+	@JsonIgnoreProperties({"master", "orders"})
 	private Master master;
 
 	@Column(name = "name")

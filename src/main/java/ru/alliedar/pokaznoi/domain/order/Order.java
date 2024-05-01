@@ -1,5 +1,6 @@
 package ru.alliedar.pokaznoi.domain.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,10 +31,12 @@ public class Order {
 
 	@ManyToOne
 	@JoinColumn(name = "client_id", nullable = false)
+	@JsonIgnoreProperties({"saleCards", "orders"})
 	private Client client;
 
 	@ManyToOne
 	@JoinColumn(name = "master_id", nullable = false)
+	@JsonIgnoreProperties("orders")
 	private Master master;
 
 	@Column(name = "price", nullable = false)
@@ -51,8 +54,8 @@ public class Order {
 	@Column(name = "rating")
 	private Integer rating;
 
-	@ManyToMany
-	@JoinTable(name = "orders_services")
-	List<Service> services;
+//	@ManyToMany
+//	@JoinTable(name = "orders_services")
+//	List<Service> services;
 }
 
