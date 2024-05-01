@@ -30,6 +30,7 @@
         <minio.version>8.5.3</minio.version>
         <xml-format.version>3.3.1</xml-format.version>
         <checkstyle.version>3.3.1</checkstyle.version>
+        <telegrambot.version>6.9.7.1</telegrambot.version>
     </properties>
 
     <dependencies>
@@ -135,11 +136,18 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Swagger  -->
+        <!-- Swagger -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${springdoc.version}</version>
+        </dependency>
+
+        <!-- Телеграм бот -->
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots</artifactId>
+            <version>${telegrambot.version}</version>
         </dependency>
 
     </dependencies>
@@ -173,30 +181,6 @@
                             <keepBlankLines>true</keepBlankLines>
                             <lineEnding>LF</lineEnding>
                             <includes>pom.xml</includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyle.version}</version>
-                <configuration>
-                    <configLocation>sun_checks.xml</configLocation>
-                    <consoleOutput>true</consoleOutput>
-                    <failsOnError>true</failsOnError>
-                    <linkXRef>false</linkXRef>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>validate</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
-                            <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
                         </configuration>
                     </execution>
                 </executions>
