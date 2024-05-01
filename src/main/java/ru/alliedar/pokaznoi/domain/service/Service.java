@@ -1,10 +1,13 @@
 package ru.alliedar.pokaznoi.domain.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import ru.alliedar.pokaznoi.domain.master.Master;
+import ru.alliedar.pokaznoi.domain.order.Order;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @Entity
@@ -29,7 +32,12 @@ public class Service {
 	@Column(name = "price", nullable = false)
 	private BigDecimal price;
 
-	@Column(name = "standart_time")
-	private String standartTime;
+	@Column(name = "standard_time")
+	private String standardTime;
+
+	@ManyToMany(mappedBy = "services")
+	@JsonIgnoreProperties("services")
+	List<Order> orders;
+
 }
 

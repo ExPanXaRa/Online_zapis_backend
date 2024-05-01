@@ -10,6 +10,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import ru.alliedar.pokaznoi.domain.order.Order;
+import ru.alliedar.pokaznoi.domain.service.Service;
+import ru.alliedar.pokaznoi.domain.toolsOfMaster.BlackList;
+import ru.alliedar.pokaznoi.domain.toolsOfMaster.SaleCard;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -53,5 +56,15 @@ public class Master {
 	@OneToMany(mappedBy = "master")
 	@JsonIgnoreProperties("master")
 	private List<Order> orders;
+
+	@OneToMany(mappedBy = "master")
+	@JsonIgnoreProperties("master")
+	private List<SaleCard> saleCards;
+
+	@OneToMany(mappedBy = "blackList")
+	private List<BlackList> blackLists;
+
+	@OneToMany(mappedBy = "services")
+	private List<Service> services;
 }
 

@@ -15,6 +15,7 @@ import lombok.Data;
 import ru.alliedar.pokaznoi.domain.client.Client;
 import ru.alliedar.pokaznoi.domain.master.Master;
 import ru.alliedar.pokaznoi.domain.service.Service;
+import ru.alliedar.pokaznoi.domain.toolsOfMaster.SaleCard;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -54,8 +55,13 @@ public class Order {
 	@Column(name = "rating")
 	private Integer rating;
 
-//	@ManyToMany
-//	@JoinTable(name = "orders_services")
-//	List<Service> services;
+	@ManyToMany
+	@JoinTable(
+			name = "orders_services",
+			joinColumns = @JoinColumn(name = "order_id"),
+			inverseJoinColumns = @JoinColumn(name = "service_id")
+	)
+	@JsonIgnoreProperties("orders")
+	List<Service> services;
 }
 

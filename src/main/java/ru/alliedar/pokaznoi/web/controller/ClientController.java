@@ -27,11 +27,10 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
-@RequestMapping("/clients")
+@RequestMapping("/client")
 @RequiredArgsConstructor
 public class ClientController {
 	private final ClientService clientService;
-	private final SaleCardRepository saleCardRepository;
 	private final ClientRepository clientRepository;
 
 	@PostMapping("/register")
@@ -41,18 +40,8 @@ public class ClientController {
 		return new ResponseEntity<>(newUser, HttpStatus.CREATED);
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Client> getById(@PathVariable Long id) {
-		Client client = clientService.getById(id);
-		return new ResponseEntity<>(client, HttpStatus.OK);
-	}
 
-	@GetMapping("/a")
-	public List<SaleCard> getSaleCards() {
-		List<SaleCard> card = saleCardRepository.findAll();
-		return card;
-	}
-	@GetMapping("/b")
+	@GetMapping("/getClients")
 	public List<Client> getClient() {
 		List<Client> client = clientRepository.findAll();
 		return client;
