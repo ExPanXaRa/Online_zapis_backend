@@ -9,8 +9,8 @@ import ru.alliedar.pokaznoi.repository.ClientRepository;
 import ru.alliedar.pokaznoi.service.ClientService;
 import ru.alliedar.pokaznoi.web.dto.client.ClientRequestDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientResponseDto;
-import ru.alliedar.pokaznoi.web.mappers.ClientRequestMapper;
-import ru.alliedar.pokaznoi.web.mappers.ClientResponseMapper;
+import ru.alliedar.pokaznoi.web.mappers.client.ClientRequestMapper;
+import ru.alliedar.pokaznoi.web.mappers.client.ClientResponseMapper;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
