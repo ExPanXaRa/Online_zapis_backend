@@ -1,6 +1,7 @@
 package ru.alliedar.pokaznoi.service;
 
 import ru.alliedar.pokaznoi.domain.client.Client;
+import ru.alliedar.pokaznoi.web.dto.client.ClientRegisterDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientRequestDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientResponseDto;
 
@@ -17,5 +18,5 @@ public interface ClientService {
 //				@Param("clientId") Long clientId
 //		);
 	Client getById(Long id);
-	ClientResponseDto create(ClientRequestDto clientDto);
+	ClientResponseDto create(ClientRegisterDto clientRegisterDto);
 }

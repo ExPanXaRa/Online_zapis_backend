@@ -1,14 +1,18 @@
 package ru.alliedar.pokaznoi.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.alliedar.pokaznoi.domain.client.Client;
 import ru.alliedar.pokaznoi.domain.exception.ResourceNotFoundException;
+import ru.alliedar.pokaznoi.domain.user.Role;
 import ru.alliedar.pokaznoi.repository.ClientRepository;
 import ru.alliedar.pokaznoi.service.ClientService;
+import ru.alliedar.pokaznoi.web.dto.client.ClientRegisterDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientRequestDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientResponseDto;
+import ru.alliedar.pokaznoi.web.mappers.client.ClientRegisterMapper;
 import ru.alliedar.pokaznoi.web.mappers.client.ClientRequestMapper;
 import ru.alliedar.pokaznoi.web.mappers.client.ClientResponseMapper;
 
@@ -22,7 +26,8 @@ import java.util.Optional;
 public class ClientServiceImpl implements ClientService {
 	private final ClientRepository clientRepository;
 	private final ClientResponseMapper clientResponseMapper;
-	private final ClientRequestMapper clientRequestMapper;
+	private final ClientRegisterMapper clientRegisterMapper;
+	private final PasswordEncoder passwordEncoder;
 
 
 	@Override
@@ -35,27 +40,26 @@ public class ClientServiceImpl implements ClientService {
 
 	@Override
 	@Transactional
-	public ClientResponseDto create(ClientRequestDto clientDto) {
+	public ClientResponseDto create(ClientRegisterDto clientRegisterDto) {
 		Optional<Client> clientOptional =
-				clientRepository.findByMobileNumber(clientDto.getMobileNumber());
+				clientRepository.findByMobileNumber(clientRegisterDto.getMobileNumber());
 
 		if (clientOptional.isPresent()) {
 			throw new IllegalArgumentException("Пользователь с номером "
-					+ clientDto.getMobileNumber() + " уже существует.");
+					+ clientRegisterDto.getMobileNumber() + " уже существует.");
 		}
+		if (!clientRegisterDto.isPasswordConfirmed()) {
+			throw new IllegalArgumentException("Пароли не равны ");
+		}
+		clientRegisterDto.setPassword(passwordEncoder.encode(clientRegisterDto.getPassword()));
 		LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("GMT+6"));
 
-// Создание объекта Timestamp из LocalDateTime
 		Timestamp timestamp = Timestamp.valueOf(localDateTime);
 
-// Установка созданного Timestamp в ваш объект clientRequestDto
-//		clientDto.setCreatedAt(timestamp);
-//				if (!userRequestDto.isPasswordConfirmed()) {
-//					throw new IllegalArgumentException("Пароли не равны ");
-//				}
 
-		Client client = clientRequestMapper.toEntity(clientDto);
+		Client client = clientRegisterMapper.toEntity(clientRegisterDto);
 		client.setCreatedAt(timestamp);
+		client.setRole(Role.ROLE_USER);
 		clientRepository.save(client);
 		return clientResponseMapper.toDto(client);
 	}
