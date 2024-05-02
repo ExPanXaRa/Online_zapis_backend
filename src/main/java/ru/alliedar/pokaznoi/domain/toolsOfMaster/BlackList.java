@@ -23,9 +23,10 @@ public class BlackList {
 
 	@ManyToOne
 	@JoinColumn(name = "master_id", nullable = false)
+	@JsonIgnoreProperties({"orders","saleCards","blackLists","services"})
 	private Master master;
 
-	@Column(name = "client_phones")
+	@Column(name = "clients_phone")
 	private String clientPhones;
 
 }

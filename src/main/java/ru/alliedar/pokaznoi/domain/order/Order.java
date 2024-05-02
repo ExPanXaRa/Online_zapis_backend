@@ -37,7 +37,7 @@ public class Order {
 
 	@ManyToOne
 	@JoinColumn(name = "master_id", nullable = false)
-	@JsonIgnoreProperties("orders")
+	@JsonIgnoreProperties({"orders","saleCards","blackLists","services"})
 	private Master master;
 
 	@Column(name = "price", nullable = false)
@@ -61,7 +61,7 @@ public class Order {
 			joinColumns = @JoinColumn(name = "order_id"),
 			inverseJoinColumns = @JoinColumn(name = "service_id")
 	)
-	@JsonIgnoreProperties("orders")
-	List<Service> services;
+	@JsonIgnoreProperties({"orders","master"})
+	private List<Service> services;
 }
 

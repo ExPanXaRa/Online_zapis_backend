@@ -16,7 +16,7 @@ import java.util.List;
 public class ServiceController {
 	private final ServiceRepository serviceRepository;
 
-	@GetMapping("/")
+	@GetMapping
 	public List<Service> getServices() {
 		List<Service> service = serviceRepository.findAll();
 		return service;

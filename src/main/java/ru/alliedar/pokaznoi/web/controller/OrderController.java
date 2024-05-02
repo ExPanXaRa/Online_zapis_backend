@@ -16,7 +16,7 @@ import java.util.List;
 public class OrderController {
 	private final OrderRepository orderRepository;
 
-	@GetMapping("/")
+	@GetMapping
 	public List<Order> getOrders() {
 		List<Order> order = orderRepository.findAll();
 		return order;

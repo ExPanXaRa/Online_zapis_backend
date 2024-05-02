@@ -7,11 +7,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import ru.alliedar.pokaznoi.domain.order.Order;
 import ru.alliedar.pokaznoi.domain.service.Service;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.BlackList;
+import ru.alliedar.pokaznoi.domain.toolsOfMaster.Landing;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.SaleCard;
 
 import java.sql.Timestamp;
@@ -61,10 +63,16 @@ public class Master {
 	@JsonIgnoreProperties("master")
 	private List<SaleCard> saleCards;
 
-	@OneToMany(mappedBy = "blackList")
+	@OneToMany(mappedBy = "master")
+	@JsonIgnoreProperties("master")
 	private List<BlackList> blackLists;
 
-	@OneToMany(mappedBy = "services")
+	@OneToMany(mappedBy = "master")
+	@JsonIgnoreProperties({"services","master","orders"})
 	private List<Service> services;
+
+	@OneToOne(mappedBy = "master")
+	@JsonIgnoreProperties("master")
+	private Landing landing;
 }
 

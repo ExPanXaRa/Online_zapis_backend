@@ -16,7 +16,7 @@ public class SaleCardController {
 	private final SaleCardRepository saleCardRepository;
 
 
-	@GetMapping("/")
+	@GetMapping
 	public List<SaleCard> getSaleCards() {
 		List<SaleCard> card = saleCardRepository.findAll();
 		return card;

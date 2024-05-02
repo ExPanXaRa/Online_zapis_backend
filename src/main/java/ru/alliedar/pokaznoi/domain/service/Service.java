@@ -21,6 +21,7 @@ public class Service {
 
 	@ManyToOne
 	@JoinColumn(name = "master_id", nullable = false)
+	@JsonIgnoreProperties({"orders","saleCards","blackLists","services"})
 	private Master master;
 
 	@Column(name = "name", nullable = false)

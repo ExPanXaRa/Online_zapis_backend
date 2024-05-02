@@ -32,7 +32,7 @@ public class SaleCard {
 
 	@ManyToOne
 	@JoinColumn(name = "master_id", nullable = false)
-	@JsonIgnoreProperties({"master", "orders"})
+	@JsonIgnoreProperties({"master", "orders", "saleCards", "services","blackLists"})
 	private Master master;
 
 	@Column(name = "name")
@@ -42,7 +42,7 @@ public class SaleCard {
 	private BigDecimal percent;
 
 	@ManyToMany(mappedBy = "saleCards")
-	@JsonIgnoreProperties("saleCards")
+	@JsonIgnoreProperties({"saleCards","orders"})
 	private List<Client> clients;
 }
 
