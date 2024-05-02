@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/blackList")
+@RequestMapping("/api/v1/blackLists")
 @RequiredArgsConstructor
 public class BlackListController {
 }

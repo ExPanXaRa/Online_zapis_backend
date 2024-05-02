@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/landing")
+@RequestMapping("/api/v1/landings")
 @RequiredArgsConstructor
 public class LandingController {
 }

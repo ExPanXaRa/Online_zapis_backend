@@ -11,12 +11,12 @@ import ru.alliedar.pokaznoi.repository.OrderRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
 public class OrderController {
 	private final OrderRepository orderRepository;
 
-	@GetMapping("/getOrders")
+	@GetMapping("/")
 	public List<Order> getOrders() {
 		List<Order> order = orderRepository.findAll();
 		return order;

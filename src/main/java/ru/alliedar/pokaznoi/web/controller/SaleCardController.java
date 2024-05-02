@@ -10,13 +10,13 @@ import ru.alliedar.pokaznoi.repository.SaleCardRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping("/saleCard")
+@RequestMapping("/api/v1/saleCards")
 @RequiredArgsConstructor
 public class SaleCardController {
 	private final SaleCardRepository saleCardRepository;
 
 
-	@GetMapping("/getSaleCards")
+	@GetMapping("/")
 	public List<SaleCard> getSaleCards() {
 		List<SaleCard> card = saleCardRepository.findAll();
 		return card;

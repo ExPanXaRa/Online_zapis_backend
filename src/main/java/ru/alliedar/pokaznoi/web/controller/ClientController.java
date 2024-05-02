@@ -27,7 +27,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
-@RequestMapping("/client")
+@RequestMapping("/api/v1/clients")
 @RequiredArgsConstructor
 public class ClientController {
 	private final ClientService clientService;
@@ -41,7 +41,7 @@ public class ClientController {
 	}
 
 
-	@GetMapping("/getClients")
+	@GetMapping("/")
 	public List<Client> getClient() {
 		List<Client> client = clientRepository.findAll();
 		return client;

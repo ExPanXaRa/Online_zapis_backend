@@ -11,12 +11,12 @@ import ru.alliedar.pokaznoi.repository.ServiceRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping("/service")
+@RequestMapping("/api/v1/services")
 @RequiredArgsConstructor
 public class ServiceController {
 	private final ServiceRepository serviceRepository;
 
-	@GetMapping("/getServices")
+	@GetMapping("/")
 	public List<Service> getServices() {
 		List<Service> service = serviceRepository.findAll();
 		return service;
