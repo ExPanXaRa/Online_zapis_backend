@@ -3,6 +3,8 @@ package ru.alliedar.pokaznoi.domain.master;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,6 +17,7 @@ import ru.alliedar.pokaznoi.domain.service.Service;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.BlackList;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.Landing;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.SaleCard;
+import ru.alliedar.pokaznoi.domain.user.Role;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -27,6 +30,10 @@ public class Master {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(name = "role")
+	@Enumerated(value = EnumType.STRING)
+	private Role role;
 
 	@Column(name = "mobile_number", nullable = false)
 	private String mobileNumber;
