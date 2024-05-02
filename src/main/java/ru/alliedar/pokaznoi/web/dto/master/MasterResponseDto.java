@@ -15,6 +15,7 @@ import java.util.List;
 public class MasterResponseDto {
 	private Long id;
 	private String mobileNumber;
+	private String email;
 	private String firstname;
 	private String middlename;
 	private String secondname;

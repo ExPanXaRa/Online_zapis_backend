@@ -49,12 +49,14 @@ public class ClientServiceImpl implements ClientService {
 		Timestamp timestamp = Timestamp.valueOf(localDateTime);
 
 // Установка созданного Timestamp в ваш объект clientRequestDto
-		clientDto.setCreatedAt(timestamp);
+//		clientDto.setCreatedAt(timestamp);
 //				if (!userRequestDto.isPasswordConfirmed()) {
 //					throw new IllegalArgumentException("Пароли не равны ");
 //				}
-		Client client = clientRepository.save(
-				clientRequestMapper.toEntity(clientDto));
+
+		Client client = clientRequestMapper.toEntity(clientDto);
+		client.setCreatedAt(timestamp);
+		clientRepository.save(client);
 		return clientResponseMapper.toDto(client);
 	}
 }

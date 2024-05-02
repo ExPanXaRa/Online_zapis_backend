@@ -13,5 +13,4 @@ public class ClientRequestDto implements Serializable {
 	private String firstname;
 	private String middlename;
 	private String secondname;
-	private Timestamp createdAt;
 }

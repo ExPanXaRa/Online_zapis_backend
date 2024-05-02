@@ -19,6 +19,7 @@ import java.util.List;
 public class MasterRequestDto {
 	private Long id;
 	private String mobileNumber;
+	private String email;
 	private String password;
 	private String firstname;
 	private String middlename;
