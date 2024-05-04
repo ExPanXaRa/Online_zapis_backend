@@ -2,7 +2,6 @@ package ru.alliedar.pokaznoi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.alliedar.pokaznoi.domain.client.Client;
-import ru.alliedar.pokaznoi.domain.user.User;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package ru.alliedar.pokaznoi.domain.user;
+package ru.alliedar.pokaznoi.domain.toolsOfMaster;
 
 public enum Role {
 

@@ -17,7 +17,7 @@ import ru.alliedar.pokaznoi.domain.service.Service;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.BlackList;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.Landing;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.SaleCard;
-import ru.alliedar.pokaznoi.domain.user.Role;
+import ru.alliedar.pokaznoi.domain.toolsOfMaster.Role;
 
 import java.sql.Timestamp;
 import java.util.List;

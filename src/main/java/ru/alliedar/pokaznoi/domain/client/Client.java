@@ -1,10 +1,6 @@
 package ru.alliedar.pokaznoi.domain.client;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,13 +15,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import ru.alliedar.pokaznoi.domain.order.Order;
-import ru.alliedar.pokaznoi.domain.task.Task;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.SaleCard;
-import ru.alliedar.pokaznoi.domain.user.Role;
+import ru.alliedar.pokaznoi.domain.toolsOfMaster.Role;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data

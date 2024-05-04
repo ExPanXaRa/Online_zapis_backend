@@ -1,8 +1,6 @@
 package ru.alliedar.pokaznoi.service;
 
 import ru.alliedar.pokaznoi.domain.client.Client;
-import ru.alliedar.pokaznoi.web.dto.auth.UserLoginRequestDto;
-import ru.alliedar.pokaznoi.web.dto.auth.UserResponseDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientLoginDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientRegisterDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientResponseDto;
