@@ -7,6 +7,7 @@ import ru.alliedar.pokaznoi.domain.master.Master;
 import ru.alliedar.pokaznoi.domain.order.Order;
 
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.util.List;
 
 
@@ -34,7 +35,7 @@ public class Service {
 	private BigDecimal price;
 
 	@Column(name = "standard_time")
-	private String standardTime;
+	private Time standardTime;
 
 	@ManyToMany(mappedBy = "services")
 	@JsonIgnoreProperties("services")

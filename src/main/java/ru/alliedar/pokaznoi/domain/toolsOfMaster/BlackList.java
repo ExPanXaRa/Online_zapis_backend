@@ -26,6 +26,7 @@ public class BlackList {
 	@JsonIgnoreProperties({"orders","saleCards","blackLists","services"})
 	private Master master;
 
+
 	@Column(name = "clients_phone")
 	private String clientPhones;
 

@@ -4,6 +4,7 @@ import lombok.Data;
 import ru.alliedar.pokaznoi.domain.master.Master;
 
 import java.math.BigDecimal;
+import java.sql.Time;
 
 @Data
 public class ServiceResponseDto {
@@ -12,5 +13,5 @@ public class ServiceResponseDto {
 	private String name;
 	private String comment;
 	private BigDecimal price;
-	private String standardTime;
+	private Time standardTime;
 }

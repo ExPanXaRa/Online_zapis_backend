@@ -50,7 +50,7 @@ public class ClientController {
 			String key = UUID.randomUUID().toString();
 
 			stringRedisTemplate.opsForValue()
-					.set(key, String.valueOf(client.getId()));
+					.set(key, "C"+String.valueOf(client.getId()));
 
 			Cookie cookie = new Cookie("sessionId", key);
 			cookie.setPath("/");

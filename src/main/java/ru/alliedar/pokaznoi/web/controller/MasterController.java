@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +53,7 @@ public class MasterController {
             String key = UUID.randomUUID().toString();
 
             stringRedisTemplate.opsForValue()
-                    .set(key, String.valueOf(master.getId()));
+                    .set(key, "M"+String.valueOf(master.getId()));
 
             Cookie cookie = new Cookie("sessionId", key);
             cookie.setPath("/");

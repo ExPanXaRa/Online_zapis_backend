@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.alliedar.pokaznoi.domain.exception.ResourceNotFoundException;
 import ru.alliedar.pokaznoi.domain.master.Master;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.Role;
 import ru.alliedar.pokaznoi.repository.MasterRepository;
@@ -27,6 +28,7 @@ public class MasterServiceImpl  implements MasterService {
 	private final MasterRegisterMapper masterRegisterMapper;
 	private final MasterResponseMapper masterResponseMapper;
 	private final PasswordEncoder passwordEncoder;
+
 	@Override
 	@Transactional
 	public MasterResponseDto create(MasterRegisterDto masterRegisterDto) {
@@ -77,6 +79,15 @@ public class MasterServiceImpl  implements MasterService {
 		} else {
 			throw new IllegalArgumentException("Пользователь не найден");
 		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+//	@Cacheable(value = "UserService::getById", key = "#id")
+	public Master getById(final Long id) {
+		return masterRepository.findById(id)
+				.orElseThrow(() ->
+						new ResourceNotFoundException("User not found."));
 	}
 
 }
