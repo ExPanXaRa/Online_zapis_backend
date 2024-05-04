@@ -11,6 +11,7 @@ import ru.alliedar.pokaznoi.repository.MasterRepository;
 import ru.alliedar.pokaznoi.service.MasterService;
 import ru.alliedar.pokaznoi.web.dto.client.ClientRequestDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientResponseDto;
+import ru.alliedar.pokaznoi.web.dto.master.MasterLoginDto;
 import ru.alliedar.pokaznoi.web.dto.master.MasterRegisterDto;
 import ru.alliedar.pokaznoi.web.dto.master.MasterRequestDto;
 import ru.alliedar.pokaznoi.web.dto.master.MasterResponseDto;
@@ -62,6 +63,25 @@ public class MasterServiceImpl  implements MasterService {
 		master.setRole(Role.ROLE_MASTER);
 		masterRepository.save(master);
 		return masterResponseMapper.toDto(master);
+	}
+
+	@Override
+	@Transactional
+	public MasterResponseDto login(MasterLoginDto masterLoginDto) {
+		String mobileNumber = masterLoginDto.getMobileNumber();
+		String password = masterLoginDto.getPassword();
+
+		Optional<Master> masterOptional = masterRepository.findByMobileNumber(mobileNumber);
+		if (masterOptional.isPresent()) {
+			Master master = masterOptional.get();
+			if (passwordEncoder.matches(password, master.getPassword())) {
+				return masterResponseMapper.toDto(master);
+			} else {
+				throw new IllegalArgumentException("Неверный пароль");
+			}
+		} else {
+			throw new IllegalArgumentException("Пользователь не найден");
+		}
 	}
 
 }

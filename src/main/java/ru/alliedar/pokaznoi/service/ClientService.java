@@ -1,8 +1,10 @@
 package ru.alliedar.pokaznoi.service;
 
 import ru.alliedar.pokaznoi.domain.client.Client;
+import ru.alliedar.pokaznoi.web.dto.auth.UserLoginRequestDto;
+import ru.alliedar.pokaznoi.web.dto.auth.UserResponseDto;
+import ru.alliedar.pokaznoi.web.dto.client.ClientLoginDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientRegisterDto;
-import ru.alliedar.pokaznoi.web.dto.client.ClientRequestDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientResponseDto;
 
 import java.util.Optional;
@@ -18,5 +20,6 @@ public interface ClientService {
 //				@Param("clientId") Long clientId
 //		);
 	Client getById(Long id);
+	ClientResponseDto login(ClientLoginDto clientLoginDto);
 	ClientResponseDto create(ClientRegisterDto clientRegisterDto);
 }
