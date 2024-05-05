@@ -44,6 +44,7 @@ public class SaleCard {
 	@ManyToMany(mappedBy = "saleCards")
 	@JsonIgnoreProperties({"saleCards","orders"})
 	private List<Client> clients;
+
 }
 
 

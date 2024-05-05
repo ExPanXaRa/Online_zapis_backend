@@ -19,6 +19,7 @@ import ru.alliedar.pokaznoi.domain.toolsOfMaster.SaleCard;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.Role;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -65,9 +66,23 @@ public class Client {
 			inverseJoinColumns = @JoinColumn(name = "sale_card_id")
 	)
 	@JsonIgnoreProperties("clients")
-	private List<SaleCard> saleCards;
+	private List<SaleCard> saleCards = new ArrayList<>();
 
 	@OneToMany(mappedBy = "client")
 	@JsonIgnoreProperties("client")
 	private List<Order> orders;
+
+	public void addSaleCard(SaleCard saleCard){
+		this.saleCards.add(saleCard);
+		if (saleCard.getClients() != null) {
+			saleCard.getClients().add(this);
+		} else {
+			saleCard.setClients(List.of(this));
+		}
+	}
+
+	public void removeSaleCard(SaleCard saleCard){
+		this.saleCards.remove(saleCard);
+		saleCard.getClients().remove(this);
+	}
 }

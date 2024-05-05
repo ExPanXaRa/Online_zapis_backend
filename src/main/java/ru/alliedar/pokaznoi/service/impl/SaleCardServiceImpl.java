@@ -29,7 +29,6 @@ public class SaleCardServiceImpl implements SaleCardService {
 	private final ClientService clientService;
 
 	@Override
-	@Transactional
 	public SaleCardResponseDto create(SaleCardRequestDto saleCardRequestDto) {
 		Authentication authentication =
 				SecurityContextHolder.getContext().getAuthentication();
@@ -40,8 +39,7 @@ public class SaleCardServiceImpl implements SaleCardService {
 		saleCard.setMaster(masterService.getById(Long.valueOf(value)));
 		saleCard.setName(saleCardRequestDto.getName());
 		saleCard.setPercent(saleCardRequestDto.getPercent());
-
-		saleCard.setClients(List.of(clientService.getById(saleCardRequestDto.getClient_id())));
+		clientService.getById(saleCardRequestDto.getClient_id()).addSaleCard(saleCard);
 		saleCardRepository.save(saleCard);
 		return saleCardResponseMapper.toDto(saleCard);
 	}
