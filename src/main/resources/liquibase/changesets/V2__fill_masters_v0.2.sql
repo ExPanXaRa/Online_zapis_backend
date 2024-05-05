@@ -2,7 +2,8 @@ INSERT INTO "masters" ("role", "mobile_number", "email", "password",
                        "firstname",
                        "middlename", "secondname",
                        "remember_token", "telegram_token", "created_at")
-VALUES ('ROLE_MASTER', 'DH2 2NN', 'pearly66@sensor.com', 'friends', 'Charley',
+VALUES ('ROLE_ADMIN', 'DH2 2NN', 'pearly66@sensor.com', '$2a$12$WrBcZh2OSLN3yRL/ICsk7OQaEttl.wPwvm9NhaBwsxigyhV9N09K6
+', 'Charley',
         'Kirchner',
         'Jude',
         '18', '13', CURRENT_TIMESTAMP);

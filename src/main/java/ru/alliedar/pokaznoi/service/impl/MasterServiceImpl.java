@@ -88,6 +88,11 @@ public class MasterServiceImpl  implements MasterService {
 	}
 
 	@Override
+	public boolean isBlackListOwner(Long userId, Long blackListId) {
+		return masterRepository.isBlackListOwner(userId, blackListId);
+	}
+
+	@Override
 	@Transactional
 	public MasterResponseDto login(MasterLoginDto masterLoginDto) {
 		String mobileNumber = masterLoginDto.getMobileNumber();

@@ -32,7 +32,7 @@ public class BlackListController {
     private final BlackListService blackListService;
 
     @PostMapping("/create")
-//    @PreAuthorize("@customSecurityExpression.canAccessMaster(#blackListRequestDto.master_id)")
+    @PreAuthorize("@customSecurityExpression.canAccessMaster(#blackListRequestDto.master_id)")
     public ResponseEntity<BlackListResponseDto> create(final @RequestBody BlackListRequestDto blackListRequestDto) {
         BlackListResponseDto blackListResponseDto = blackListService.create(blackListRequestDto);
         return new ResponseEntity<>(blackListResponseDto, HttpStatus.CREATED);
@@ -40,18 +40,21 @@ public class BlackListController {
     }
 
     @PostMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression.canAccessBlackList(#id)")
     public ResponseEntity<BlackListResponseDto> update(@PathVariable("id") Long id, @RequestBody BlackListRequestDto blackListRequestDto) {
         BlackListResponseDto updatedBlackList = blackListService.update(id, blackListRequestDto);
         return ResponseEntity.ok(updatedBlackList);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression.canAccessBlackList(#id)")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         blackListService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping
+    @PreAuthorize("@customSecurityExpression.isAdmin()")
     public ResponseEntity<List<BlackListResponseDto>> getAll() {
         List<BlackListResponseDto> blackLists = blackListService.getAll();
         return ResponseEntity.ok(blackLists);

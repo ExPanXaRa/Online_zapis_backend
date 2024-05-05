@@ -48,14 +48,14 @@ public class SaleCardController {
 	}
 
 	@DeleteMapping("/{id}/clients")
-	public ResponseEntity<SaleCardResponseDto> removeClientFromSaleCard(@PathVariable Long id,
+	public ResponseEntity<SaleCardResponseDto> removeClient(@PathVariable Long id,
 																		@RequestParam Long clientId) {
 		SaleCardResponseDto updatedSaleCard = saleCardService.removeClient(id, clientId);
 		return ResponseEntity.ok(updatedSaleCard);
 	}
 
 	@PostMapping("/{id}/clients")
-	public ResponseEntity<SaleCardResponseDto> addClientToSaleCard(@PathVariable Long id,
+	public ResponseEntity<SaleCardResponseDto> addClient(@PathVariable Long id,
 																   @RequestParam Long clientId) {
 		SaleCardResponseDto updatedSaleCard = saleCardService.addClient(id, clientId);
 		return ResponseEntity.ok(updatedSaleCard);

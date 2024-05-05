@@ -17,4 +17,6 @@ public interface MasterService {
 	Master getById(final Long id);
 
 	MasterResponseChangeDto update(MasterChangeDto masterChangeDto);
+
+	boolean isBlackListOwner(Long userId, Long blackListId);
 }

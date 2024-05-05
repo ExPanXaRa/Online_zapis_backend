@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -50,7 +51,7 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-// @EnableMethodSecurity //для работы кастомных секьюрити эксепшенов
+@EnableMethodSecurity //для работы кастомных секьюрити эксепшенов
 //@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 @RequiredArgsConstructor
 public class ApplicationConfig {
@@ -121,11 +122,11 @@ public class ApplicationConfig {
 				)
 				.authorizeHttpRequests((authz) ->
 						authz
-								.requestMatchers("/auth/register",
-										"/auth/login", "/auth/resetPassword",
-										"/api/v1/**", "/swagger-ui/**",
-										"/v3/api-docs/**")
+								.requestMatchers("/api/v1/clients/register",
+										"/api/v1/masters/register","/api/v1/masters/login",
+										"/api/v1/clients/login", "/swagger-ui/**", "/v3/api-docs/**")
 								.permitAll()
+//								.requestMatchers("/**").hasRole("ADMIN")
 								.anyRequest().authenticated()
 				)
 				.addFilterBefore(new CookieAuthFilter(stringRedisTemplate),
