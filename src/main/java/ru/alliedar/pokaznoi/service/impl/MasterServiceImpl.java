@@ -93,6 +93,11 @@ public class MasterServiceImpl  implements MasterService {
 	}
 
 	@Override
+	public boolean isSaleCardOwner(Long userId, Long saleCardId) {
+		return masterRepository.isSaleCardOwner(userId, saleCardId);
+	}
+
+	@Override
 	@Transactional
 	public MasterResponseDto login(MasterLoginDto masterLoginDto) {
 		String mobileNumber = masterLoginDto.getMobileNumber();

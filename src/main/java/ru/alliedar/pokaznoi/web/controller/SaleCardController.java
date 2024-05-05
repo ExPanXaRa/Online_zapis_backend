@@ -3,6 +3,7 @@ package ru.alliedar.pokaznoi.web.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +33,7 @@ public class SaleCardController {
 	private final SaleCardService saleCardService;
 
 	@PostMapping("/create")
-//    @PreAuthorize("@customSecurityExpression.canAccessMaster(#blackListRequestDto.master_id)")
+	@PreAuthorize("@customSecurityExpression.canAccessMaster(#saleCardRequestDto.master_id)")
 	public ResponseEntity<SaleCardResponseDto> create(final @RequestBody SaleCardRequestDto saleCardRequestDto) { // TODO нормально сделать надо создание
 		SaleCardResponseDto saleCardResponseDto = saleCardService.create(saleCardRequestDto);
 		return new ResponseEntity<>(saleCardResponseDto, HttpStatus.CREATED);
@@ -40,6 +41,7 @@ public class SaleCardController {
 	}
 
 	@PostMapping("/update/{id}")
+	@PreAuthorize("@customSecurityExpression.canAccessSaleCard(#id)")
 	public ResponseEntity<SaleCardResponseDto> update(@PathVariable Long id,
 													  @Validated(OnCreate.class)
 													  final @RequestBody SaleCardUpdateDto saleCardUpdateDto) {
@@ -47,14 +49,16 @@ public class SaleCardController {
 		return new ResponseEntity<>(saleCardResponseDto, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/{id}/clients")
+	@DeleteMapping("/{id}")
+	@PreAuthorize("@customSecurityExpression.canAccessSaleCard(#id)")
 	public ResponseEntity<SaleCardResponseDto> removeClient(@PathVariable Long id,
 																		@RequestParam Long clientId) {
 		SaleCardResponseDto updatedSaleCard = saleCardService.removeClient(id, clientId);
 		return ResponseEntity.ok(updatedSaleCard);
 	}
 
-	@PostMapping("/{id}/clients")
+	@PostMapping("/{id}")
+	@PreAuthorize("@customSecurityExpression.canAccessSaleCard(#id)")
 	public ResponseEntity<SaleCardResponseDto> addClient(@PathVariable Long id,
 																   @RequestParam Long clientId) {
 		SaleCardResponseDto updatedSaleCard = saleCardService.addClient(id, clientId);
@@ -64,6 +68,7 @@ public class SaleCardController {
 
 
 	@GetMapping
+	@PreAuthorize("@customSecurityExpression.isAdmin()")
 	public ResponseEntity<List<SaleCardResponseDto>> getAll() {
 		List<SaleCardResponseDto> saleCard = saleCardService.getAll();
 		return ResponseEntity.ok(saleCard);

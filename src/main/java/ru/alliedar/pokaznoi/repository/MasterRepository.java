@@ -23,4 +23,15 @@ public interface MasterRepository extends JpaRepository<Master, Long> {
 	boolean isBlackListOwner(@Param("masterId") Long masterId,
 						@Param("blackListId") Long blackListIdId);
 
+	@Query(value = """
+            SELECT exists(
+                          SELECT 1
+                          FROM sale_cards
+                          WHERE master_id = :masterId
+                          AND id = :saleCardId
+                          )
+            """, nativeQuery = true)
+	boolean isSaleCardOwner(@Param("masterId") Long masterId,
+							 @Param("saleCardId") Long saleCardId);
+
 }

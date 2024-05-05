@@ -18,6 +18,8 @@ import java.util.List;
 public class SaleCardRequestDto {
 	private Long id;
 
+	private Long master_id;
+
 	private Long client_id;
 
 	@NotBlank(message = "Name must not be null!",

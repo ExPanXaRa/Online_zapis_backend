@@ -19,4 +19,6 @@ public interface MasterService {
 	MasterResponseChangeDto update(MasterChangeDto masterChangeDto);
 
 	boolean isBlackListOwner(Long userId, Long blackListId);
+
+	boolean isSaleCardOwner(Long userId, Long blackListId);
 }
