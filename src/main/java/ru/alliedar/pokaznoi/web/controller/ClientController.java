@@ -1,5 +1,9 @@
 package ru.alliedar.pokaznoi.web.controller;
 
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,6 +47,11 @@ public class ClientController {
 	}
 
 	@PostMapping("/login")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "OK", headers = {
+					@Header(name = "Set-Cookie", description = "sessionId", schema = @Schema(type = "string"))
+			})
+	})
 	public ResponseEntity<ClientResponseDto> loginUser(
 			final @RequestBody ClientLoginDto clientLoginDto,
 			final HttpServletResponse response,

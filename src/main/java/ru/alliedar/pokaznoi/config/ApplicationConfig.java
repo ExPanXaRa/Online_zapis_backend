@@ -26,6 +26,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import ru.alliedar.pokaznoi.service.props.MinioProperties;
 import ru.alliedar.pokaznoi.web.security.CookieAuthFilter;
 
+
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -69,8 +72,7 @@ public class ApplicationConfig {
 	@Bean
 	public OpenAPI openAPI() {
 		return new OpenAPI()
-				.addSecurityItem(new SecurityRequirement()
-						.addList("bearerAuth"))
+				.addSecurityItem(new SecurityRequirement().addList("cookieAuth"))
 				.components(
 						new Components().addSecuritySchemes(
 								"cookieAuth", new SecurityScheme()
@@ -80,8 +82,8 @@ public class ApplicationConfig {
 						)
 				)
 				.info(new Info()
-						.title("Task list API")
-						.description("Demo Spring Boot application")
+						.title("API сервиса онлайн запись клиентов")
+						.description("Демо")
 						.version("1.0")
 				);
 	}
