@@ -21,4 +21,6 @@ public interface MasterService {
 	boolean isBlackListOwner(Long userId, Long blackListId);
 
 	boolean isSaleCardOwner(Long userId, Long blackListId);
+	boolean isServiceOwner(Long userId, Long blackListId);
+
 }

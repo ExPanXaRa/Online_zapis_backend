@@ -34,4 +34,15 @@ public interface MasterRepository extends JpaRepository<Master, Long> {
 	boolean isSaleCardOwner(@Param("masterId") Long masterId,
 							 @Param("saleCardId") Long saleCardId);
 
+	@Query(value = """
+            SELECT exists(
+                          SELECT 1
+                          FROM services
+                          WHERE master_id = :masterId
+                          AND id = :serviceId
+                          )
+            """, nativeQuery = true)
+	boolean isServiceOwner(@Param("masterId") Long masterId,
+							@Param("serviceId") Long serviceId);
+
 }

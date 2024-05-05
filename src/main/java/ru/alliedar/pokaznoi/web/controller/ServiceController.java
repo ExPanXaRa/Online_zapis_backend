@@ -33,21 +33,21 @@ public class ServiceController {
     private final ServiceService serviceService;
 
     @GetMapping
-//	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
+    @PreAuthorize("@customSecurityExpression.isAdmin()")
     public ResponseEntity<List<ServiceResponseDto>> getServices() {
         List<ServiceResponseDto> service = serviceService.getAll();
         return ResponseEntity.ok(service);
     }
 
     @GetMapping("/{id}")
-//	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
+    @PreAuthorize("@customSecurityExpression.canAccessService(#id)")
     public ResponseEntity<ServiceResponseDto> getServiceById(final @PathVariable Long id) {
         ServiceResponseDto service = serviceService.getById(id);
         return ResponseEntity.ok(service);
     }
 
     @PostMapping("/{id}")
-//	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
+    @PreAuthorize("@customSecurityExpression.canAccessService(#id)")
     public ResponseEntity<ServiceResponseDto> updateServiceById(final @PathVariable Long id,
             final @RequestBody ServiceRequestDto serviceRequestDto) {
         ServiceResponseDto service = serviceService.update(serviceRequestDto, id);
@@ -55,7 +55,7 @@ public class ServiceController {
     }
 
     @PostMapping("/create")
-//    @PreAuthorize("@customSecurityExpression.canAccessMaster(#blackListRequestDto.master_id)")
+    @PreAuthorize("@customSecurityExpression.canAccessMaster(#serviceRequestDto.master_id)")
     public ResponseEntity<ServiceResponseDto> create(final @RequestBody ServiceRequestDto serviceRequestDto) {
         ServiceResponseDto serviceResponseDto = serviceService.create(serviceRequestDto);
         return new ResponseEntity<>(serviceResponseDto, HttpStatus.CREATED);
@@ -63,6 +63,7 @@ public class ServiceController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression.canAccessService(#id)")
     public ResponseEntity<Void> deleteServiceById(final @PathVariable Long id) {
         serviceService.delete(id);
         return ResponseEntity.ok().build();
