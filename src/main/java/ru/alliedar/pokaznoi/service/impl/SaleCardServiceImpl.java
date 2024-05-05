@@ -15,12 +15,14 @@ import ru.alliedar.pokaznoi.repository.SaleCardRepository;
 import ru.alliedar.pokaznoi.service.ClientService;
 import ru.alliedar.pokaznoi.service.MasterService;
 import ru.alliedar.pokaznoi.service.SaleCardService;
+import ru.alliedar.pokaznoi.web.dto.toolsOfMaster.BlackListResponseDto;
 import ru.alliedar.pokaznoi.web.dto.toolsOfMaster.SaleCardRequestDto;
 import ru.alliedar.pokaznoi.web.dto.toolsOfMaster.SaleCardResponseDto;
 import ru.alliedar.pokaznoi.web.dto.toolsOfMaster.SaleCardUpdateDto;
 import ru.alliedar.pokaznoi.web.mappers.toolsOfMaster.SaleCardResponseMapper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +33,15 @@ public class SaleCardServiceImpl implements SaleCardService {
 	private final SaleCardResponseMapper saleCardResponseMapper;
 	private final ClientService clientService;
 	private final ClientRepository clientRepository;
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<SaleCardResponseDto> getAll() {
+		List<SaleCard> saleCards = saleCardRepository.findAll();
+		return saleCards.stream()
+				.map(saleCardResponseMapper::toDto)
+				.collect(Collectors.toList());
+	}
 
 	@Override
 	public SaleCardResponseDto create(SaleCardRequestDto saleCardRequestDto) {
@@ -66,11 +77,9 @@ public class SaleCardServiceImpl implements SaleCardService {
 
 	@Override
 	public SaleCardResponseDto removeClient(Long saleCardId, Long clientId) {
-		// Получить объект SaleCard из репозитория по ID
 		SaleCard saleCard = saleCardRepository.findById(saleCardId)
 				.orElseThrow(() -> new EntityNotFoundException("SaleCard not found with id: " + saleCardId));
 
-		// Получить объект Client из репозитория по ID
 		Client client = clientRepository.findById(clientId)
 				.orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + clientId));
 

@@ -3,6 +3,7 @@ package ru.alliedar.pokaznoi.web.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.alliedar.pokaznoi.domain.master.Master;
 import ru.alliedar.pokaznoi.repository.MasterRepository;
 import ru.alliedar.pokaznoi.service.MasterService;
+import ru.alliedar.pokaznoi.web.dto.client.ClientChangeDto;
+import ru.alliedar.pokaznoi.web.dto.client.ClientResponseDto;
+import ru.alliedar.pokaznoi.web.dto.master.MasterChangeDto;
 import ru.alliedar.pokaznoi.web.dto.master.MasterLoginDto;
 import ru.alliedar.pokaznoi.web.dto.master.MasterRegisterDto;
+import ru.alliedar.pokaznoi.web.dto.master.MasterResponseChangeDto;
 import ru.alliedar.pokaznoi.web.dto.master.MasterResponseDto;
 import ru.alliedar.pokaznoi.web.dto.validation.OnCreate;
 
@@ -43,8 +48,10 @@ public class MasterController {
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
+
     @PostMapping("/login")
     public ResponseEntity<MasterResponseDto> loginUser(
+            @Valid
             final @RequestBody MasterLoginDto masterLoginDto,
             final HttpServletResponse response,
             final HttpServletRequest request) {
@@ -81,6 +88,11 @@ public class MasterController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+    @PostMapping("/update")
+    public ResponseEntity<MasterResponseChangeDto> updateClient(@Valid @RequestBody MasterChangeDto masterChangeDto) {
+        MasterResponseChangeDto updatedMaster = masterService.update(masterChangeDto);
+        return ResponseEntity.ok(updatedMaster);
     }
 
     @GetMapping

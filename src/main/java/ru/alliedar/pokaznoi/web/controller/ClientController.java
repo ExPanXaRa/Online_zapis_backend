@@ -44,6 +44,7 @@ public class ClientController {
 
 	@PostMapping("/login")
 	public ResponseEntity<ClientResponseDto> loginUser(
+			@Valid
 			final @RequestBody ClientLoginDto clientLoginDto,
 			final HttpServletResponse response,
 			final HttpServletRequest request) {

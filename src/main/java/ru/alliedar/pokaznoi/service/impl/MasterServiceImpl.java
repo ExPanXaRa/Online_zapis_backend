@@ -1,18 +1,23 @@
 package ru.alliedar.pokaznoi.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.alliedar.pokaznoi.domain.client.Client;
 import ru.alliedar.pokaznoi.domain.exception.ResourceNotFoundException;
 import ru.alliedar.pokaznoi.domain.master.Master;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.Role;
 import ru.alliedar.pokaznoi.repository.MasterRepository;
 import ru.alliedar.pokaznoi.service.MasterService;
+import ru.alliedar.pokaznoi.web.dto.master.MasterChangeDto;
 import ru.alliedar.pokaznoi.web.dto.master.MasterLoginDto;
 import ru.alliedar.pokaznoi.web.dto.master.MasterRegisterDto;
+import ru.alliedar.pokaznoi.web.dto.master.MasterResponseChangeDto;
 import ru.alliedar.pokaznoi.web.dto.master.MasterResponseDto;
 import ru.alliedar.pokaznoi.web.mappers.master.MasterRegisterMapper;
+import ru.alliedar.pokaznoi.web.mappers.master.MasterResponseChangeMapper;
 import ru.alliedar.pokaznoi.web.mappers.master.MasterResponseMapper;
 
 import java.sql.Timestamp;
@@ -28,6 +33,7 @@ public class MasterServiceImpl  implements MasterService {
 	private final MasterRegisterMapper masterRegisterMapper;
 	private final MasterResponseMapper masterResponseMapper;
 	private final PasswordEncoder passwordEncoder;
+	private final MasterResponseChangeMapper masterResponseChangeMapper;
 
 	@Override
 	@Transactional
@@ -64,6 +70,25 @@ public class MasterServiceImpl  implements MasterService {
 
 	@Override
 	@Transactional
+	public MasterResponseChangeDto update(MasterChangeDto masterChangeDto) {
+		Optional<Master> masterOptional = masterRepository.findById(masterChangeDto.getId());
+		if (masterOptional.isPresent()) {
+			Master master = masterOptional.get();
+			master.setEmail(masterChangeDto.getEmail());
+			master.setMobileNumber(masterChangeDto.getMobileNumber());
+			master.setFirstname(masterChangeDto.getFirstname());
+			master.setMiddlename(masterChangeDto.getMiddlename());
+			master.setSecondname(masterChangeDto.getSecondname());
+
+			Master updatedMaster = masterRepository.save(master);
+			return masterResponseChangeMapper.toDto(updatedMaster);
+		} else {
+			throw new EntityNotFoundException("Client not found with id: " + masterChangeDto.getId());
+		}
+	}
+
+	@Override
+	@Transactional
 	public MasterResponseDto login(MasterLoginDto masterLoginDto) {
 		String mobileNumber = masterLoginDto.getMobileNumber();
 		String password = masterLoginDto.getPassword();
@@ -89,5 +114,4 @@ public class MasterServiceImpl  implements MasterService {
 				.orElseThrow(() ->
 						new ResourceNotFoundException("User not found."));
 	}
-
 }

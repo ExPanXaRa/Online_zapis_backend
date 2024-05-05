@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.SaleCard;
 import ru.alliedar.pokaznoi.repository.SaleCardRepository;
@@ -46,24 +47,31 @@ public class SaleCardController {
 		return new ResponseEntity<>(saleCardResponseDto, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/{saleCardId}/clients/{clientId}")
-	public ResponseEntity<SaleCardResponseDto> removeClientFromSaleCard(@PathVariable Long saleCardId,
-																		@PathVariable Long clientId) {
-		SaleCardResponseDto updatedSaleCard = saleCardService.removeClient(saleCardId, clientId);
+	@DeleteMapping("/{id}/clients")
+	public ResponseEntity<SaleCardResponseDto> removeClientFromSaleCard(@PathVariable Long id,
+																		@RequestParam Long clientId) {
+		SaleCardResponseDto updatedSaleCard = saleCardService.removeClient(id, clientId);
 		return ResponseEntity.ok(updatedSaleCard);
 	}
 
-	@PostMapping("/{saleCardId}/clients/{clientId}")
-	public ResponseEntity<SaleCardResponseDto> addClientToSaleCard(@PathVariable Long saleCardId,
-																   @PathVariable Long clientId) {
-		SaleCardResponseDto updatedSaleCard = saleCardService.addClient(saleCardId, clientId);
+	@PostMapping("/{id}/clients")
+	public ResponseEntity<SaleCardResponseDto> addClientToSaleCard(@PathVariable Long id,
+																   @RequestParam Long clientId) {
+		SaleCardResponseDto updatedSaleCard = saleCardService.addClient(id, clientId);
 		return ResponseEntity.ok(updatedSaleCard);
 	}
 
 
-	@GetMapping()
-	public List<SaleCard> getSaleCards() {
-		List<SaleCard> card = saleCardRepository.findAll();
-		return card;
+
+	@GetMapping
+	public ResponseEntity<List<SaleCardResponseDto>> getAll() {
+		List<SaleCardResponseDto> saleCard = saleCardService.getAll();
+		return ResponseEntity.ok(saleCard);
 	}
+
+//	@GetMapping()
+//	public List<SaleCard> getSaleCards() {
+//		List<SaleCard> card = saleCardRepository.findAll();
+//		return card;
+//	}
 }
