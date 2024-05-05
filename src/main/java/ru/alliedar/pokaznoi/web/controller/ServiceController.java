@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,9 +38,32 @@ public class ServiceController {
 	}
 
 	@GetMapping
-	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
-	public List<Service> getServices() {
-		List<Service> service = serviceRepository.findAll();
-		return service;
+//	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
+	public ResponseEntity<List<ServiceResponseDto>> getServices() {
+		List<ServiceResponseDto> service = serviceService.getAll();
+		return ResponseEntity.ok(service);
 	}
+
+	@GetMapping("/{id}")
+//	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
+	public ResponseEntity<ServiceResponseDto> getServiceById(final @PathVariable Long id) {
+		ServiceResponseDto service = serviceService.getById(id);
+		return ResponseEntity.ok(service);
+	}
+
+	@PostMapping
+//	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
+	public ResponseEntity<ServiceResponseDto> updateServiceById(final @RequestBody ServiceRequestDto serviceRequestDto) {
+		ServiceResponseDto service = serviceService.update(serviceRequestDto);
+		return ResponseEntity.ok(service);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteServiceById(final @PathVariable Long id) {
+		serviceService.delete(id);
+		return ResponseEntity.ok().build();
+	}
+
+
+
 }

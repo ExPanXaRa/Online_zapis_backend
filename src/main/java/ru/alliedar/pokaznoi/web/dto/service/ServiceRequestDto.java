@@ -17,7 +17,6 @@ import java.sql.Timestamp;
 @Data
 public class ServiceRequestDto {
 	private Long id;
-	private Master master;
 
 	@NotBlank(message = "Name must not be null!",
 			groups = {OnCreate.class, OnUpdate.class})
