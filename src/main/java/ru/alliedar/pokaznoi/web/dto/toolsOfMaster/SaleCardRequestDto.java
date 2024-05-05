@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 public class SaleCardRequestDto {
 	private Long id;
-
+	@NotBlank(message = "master_id must be not null!")
 	private Long master_id;
 
 	private Long client_id;

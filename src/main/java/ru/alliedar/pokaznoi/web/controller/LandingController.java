@@ -1,6 +1,7 @@
 package ru.alliedar.pokaznoi.web.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ public class LandingController {
 
     private final LandingRepository landingRepository;
     @GetMapping
+    @PreAuthorize("@customSecurityExpression.isAdmin()")
     public List<Landing> getLandings() {
         List<Landing> landings = landingRepository.findAll();
         return landings;

@@ -101,12 +101,14 @@ public class MasterController {
         }
     }
     @PostMapping("/update")
-    public ResponseEntity<MasterResponseChangeDto> updateClient(@Valid @RequestBody MasterChangeDto masterChangeDto) {
+    @PreAuthorize("@customSecurityExpression.canAccessMaster(#masterChangeDto.id)")
+    public ResponseEntity<MasterResponseChangeDto> updateMaster(@Valid @RequestBody MasterChangeDto masterChangeDto) {
         MasterResponseChangeDto updatedMaster = masterService.update(masterChangeDto);
         return ResponseEntity.ok(updatedMaster);
     }
 
     @GetMapping
+    @PreAuthorize("@customSecurityExpression.isAdmin()")
     public List<Master> getMasters() {
         List<Master> masters = masterRepository.findAll();
         return masters;

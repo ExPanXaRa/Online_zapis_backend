@@ -10,6 +10,7 @@ import ru.alliedar.pokaznoi.web.dto.validation.OnUpdate;
 
 @Data
 public class ClientChangeDto {
+	@NotBlank(message = "id must not be null!")
 	private Long id;
 
 	@NotBlank(message = "Number must not be null!",

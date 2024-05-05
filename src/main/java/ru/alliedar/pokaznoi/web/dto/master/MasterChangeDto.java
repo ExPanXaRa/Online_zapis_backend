@@ -10,6 +10,7 @@ import ru.alliedar.pokaznoi.web.dto.validation.OnUpdate;
 
 @Data
 public class MasterChangeDto {
+	@NotBlank(message = "Id must be not null!")
 	private Long id;
 	@NotBlank(message = "Number must not be null!",
 			groups = {OnCreate.class, OnUpdate.class})

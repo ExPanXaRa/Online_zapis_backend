@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -95,6 +96,7 @@ public class ClientController {
 	}
 
 	@PostMapping("/update")
+	@PreAuthorize("@customSecurityExpression.canAccessClient(#clientChangeDto.id)")
 	public ResponseEntity<ClientResponseDto> updateClient(@Valid @RequestBody ClientChangeDto clientChangeDto) {
 		ClientResponseDto updatedClient = clientService.update(clientChangeDto);
 		return ResponseEntity.ok(updatedClient);
@@ -102,6 +104,7 @@ public class ClientController {
 
 
 	@GetMapping
+	@PreAuthorize("@customSecurityExpression.isAdmin()")
 	public List<Client> getClient() {
 		List<Client> client = clientRepository.findAll();
 		return client;

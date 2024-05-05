@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 @Data
 public class ServiceRequestDto {
 	private Long id;
+	@NotBlank(message = "Id must be not null!")
 	private Long master_id;
 	private Master master;
 
