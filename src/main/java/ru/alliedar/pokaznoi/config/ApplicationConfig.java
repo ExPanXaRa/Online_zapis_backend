@@ -72,13 +72,12 @@ public class ApplicationConfig {
 				.addSecurityItem(new SecurityRequirement()
 						.addList("bearerAuth"))
 				.components(
-						new Components()
-								.addSecuritySchemes(
-										"bearerAuth", new SecurityScheme()
-												.type(SecurityScheme.Type.HTTP)
-												.scheme("bearer")
-												.bearerFormat("JWT")
-								)
+						new Components().addSecuritySchemes(
+								"cookieAuth", new SecurityScheme()
+										.type(SecurityScheme.Type.APIKEY)
+										.in(SecurityScheme.In.COOKIE)
+										.name("sessionId")
+						)
 				)
 				.info(new Info()
 						.title("Task list API")
