@@ -14,7 +14,7 @@ public interface ServiceService {
 
     ServiceResponseDto getById(Long id);
 
-    ServiceResponseDto update(ServiceRequestDto serviceRequestDto);
+    ServiceResponseDto update(ServiceRequestDto serviceRequestDto, Long id);
 
     void delete(Long id);
 }

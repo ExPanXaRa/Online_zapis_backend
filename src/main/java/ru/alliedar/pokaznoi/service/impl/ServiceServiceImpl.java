@@ -59,11 +59,12 @@ public class ServiceServiceImpl implements ServiceService {
 	}
 
 	@Override
-	public ServiceResponseDto update(ServiceRequestDto serviceRequestDto) {
+	public ServiceResponseDto update(ServiceRequestDto serviceRequestDto, Long id) {
 		Authentication authentication =
 				SecurityContextHolder.getContext().getAuthentication();
 		String key = (String) authentication.getPrincipal();
 		String value = stringRedisTemplate.opsForValue().get(key).substring(1);
+		serviceRequestDto.setId(id);
 		Service service = serviceRequestMapper.toEntity(serviceRequestDto);
 		service.setMaster(masterService.getById(Long.valueOf(value)));
 		serviceRepository.save(service);

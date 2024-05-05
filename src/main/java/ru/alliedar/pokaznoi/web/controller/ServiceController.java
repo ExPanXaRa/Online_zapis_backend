@@ -26,44 +26,44 @@ import java.util.List;
 @RequestMapping("/api/v1/services")
 @RequiredArgsConstructor
 public class ServiceController {
-	private final ServiceRepository serviceRepository;
-	private final ServiceService serviceService;
+    private final ServiceRepository serviceRepository;
+    private final ServiceService serviceService;
 
-	@PostMapping("/create")
+    @GetMapping
+//	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
+    public ResponseEntity<List<ServiceResponseDto>> getServices() {
+        List<ServiceResponseDto> service = serviceService.getAll();
+        return ResponseEntity.ok(service);
+    }
+
+    @GetMapping("/{id}")
+//	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
+    public ResponseEntity<ServiceResponseDto> getServiceById(final @PathVariable Long id) {
+        ServiceResponseDto service = serviceService.getById(id);
+        return ResponseEntity.ok(service);
+    }
+
+    @PostMapping("/{id}")
+//	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
+    public ResponseEntity<ServiceResponseDto> updateServiceById(final @PathVariable Long id,
+            final @RequestBody ServiceRequestDto serviceRequestDto) {
+        ServiceResponseDto service = serviceService.update(serviceRequestDto, id);
+        return ResponseEntity.ok(service);
+    }
+
+    @PostMapping("/create")
 //    @PreAuthorize("@customSecurityExpression.canAccessMaster(#blackListRequestDto.master_id)")
-	public ResponseEntity<ServiceResponseDto> create(final @RequestBody ServiceRequestDto serviceRequestDto) {
-		ServiceResponseDto serviceResponseDto = serviceService.create(serviceRequestDto);
-		return new ResponseEntity<>(serviceResponseDto, HttpStatus.CREATED);
+    public ResponseEntity<ServiceResponseDto> create(final @RequestBody ServiceRequestDto serviceRequestDto) {
+        ServiceResponseDto serviceResponseDto = serviceService.create(serviceRequestDto);
+        return new ResponseEntity<>(serviceResponseDto, HttpStatus.CREATED);
 
-	}
+    }
 
-	@GetMapping
-//	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
-	public ResponseEntity<List<ServiceResponseDto>> getServices() {
-		List<ServiceResponseDto> service = serviceService.getAll();
-		return ResponseEntity.ok(service);
-	}
-
-	@GetMapping("/{id}")
-//	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
-	public ResponseEntity<ServiceResponseDto> getServiceById(final @PathVariable Long id) {
-		ServiceResponseDto service = serviceService.getById(id);
-		return ResponseEntity.ok(service);
-	}
-
-	@PostMapping
-//	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
-	public ResponseEntity<ServiceResponseDto> updateServiceById(final @RequestBody ServiceRequestDto serviceRequestDto) {
-		ServiceResponseDto service = serviceService.update(serviceRequestDto);
-		return ResponseEntity.ok(service);
-	}
-
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteServiceById(final @PathVariable Long id) {
-		serviceService.delete(id);
-		return ResponseEntity.ok().build();
-	}
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteServiceById(final @PathVariable Long id) {
+        serviceService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 
 
 }
