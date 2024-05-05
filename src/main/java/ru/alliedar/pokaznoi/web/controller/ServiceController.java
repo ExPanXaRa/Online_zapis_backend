@@ -36,6 +36,7 @@ public class ServiceController {
 //	@PreAuthorize("@customSecurityExpression.canAccessMaster(#id)")
     public ResponseEntity<List<ServiceResponseDto>> getServices() {
         List<ServiceResponseDto> service = serviceService.getAll();
+
         return ResponseEntity.ok(service);
     }
 
