@@ -30,4 +30,5 @@ public class BlackList {
 	@Column(name = "clients_phone")
 	private String clientPhones;
 
+
 }
