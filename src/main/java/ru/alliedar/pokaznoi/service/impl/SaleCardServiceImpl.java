@@ -88,6 +88,10 @@ public class SaleCardServiceImpl implements SaleCardService {
 		Client client = clientRepository.findById(clientId)
 				.orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + clientId));
 
+		if (saleCard.getClients().contains(client)) {
+			throw new IllegalStateException("Client with id " + clientId + " is already associated with SaleCard with id " + saleCardId);
+		}
+
 		saleCard.getClients().add(client);
 		client.addSaleCard(saleCard);
 		SaleCard updatedSaleCard = saleCardRepository.save(saleCard);
