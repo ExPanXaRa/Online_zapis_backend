@@ -15,3 +15,7 @@ public class SaleCardResponseDto {
 	private BigDecimal percent;
 	private List<Client> clients;
 }
+
+//1 обновление данных карточки кроме клиентов
+//2 удаление клиента в карточку
+//3 доабвление клиента в карточку
