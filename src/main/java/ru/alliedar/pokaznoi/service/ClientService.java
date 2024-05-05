@@ -1,6 +1,7 @@
 package ru.alliedar.pokaznoi.service;
 
 import ru.alliedar.pokaznoi.domain.client.Client;
+import ru.alliedar.pokaznoi.web.dto.client.ClientChangeDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientLoginDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientRegisterDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientResponseDto;
@@ -20,4 +21,5 @@ public interface ClientService {
 	Client getById(Long id);
 	ClientResponseDto login(ClientLoginDto clientLoginDto);
 	ClientResponseDto create(ClientRegisterDto clientRegisterDto);
+	ClientResponseDto update(ClientChangeDto clientChangeDto);
 }

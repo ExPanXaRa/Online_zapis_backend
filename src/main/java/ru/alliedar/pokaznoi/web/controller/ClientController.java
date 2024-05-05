@@ -3,6 +3,7 @@ package ru.alliedar.pokaznoi.web.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.alliedar.pokaznoi.domain.client.Client;
 import ru.alliedar.pokaznoi.repository.ClientRepository;
 import ru.alliedar.pokaznoi.service.ClientService;
+import ru.alliedar.pokaznoi.web.dto.client.ClientChangeDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientLoginDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientRegisterDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientResponseDto;
@@ -78,6 +80,12 @@ public class ClientController {
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
+	}
+
+	@PostMapping("/update")
+	public ResponseEntity<ClientResponseDto> updateClient(@Valid @RequestBody ClientChangeDto clientChangeDto) {
+		ClientResponseDto updatedClient = clientService.update(clientChangeDto);
+		return ResponseEntity.ok(updatedClient);
 	}
 
 

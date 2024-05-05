@@ -1,5 +1,6 @@
 package ru.alliedar.pokaznoi.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import ru.alliedar.pokaznoi.domain.exception.ResourceNotFoundException;
 import ru.alliedar.pokaznoi.domain.toolsOfMaster.Role;
 import ru.alliedar.pokaznoi.repository.ClientRepository;
 import ru.alliedar.pokaznoi.service.ClientService;
+import ru.alliedar.pokaznoi.web.dto.client.ClientChangeDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientLoginDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientRegisterDto;
 import ru.alliedar.pokaznoi.web.dto.client.ClientResponseDto;
@@ -62,6 +64,25 @@ public class ClientServiceImpl implements ClientService {
 		clientRepository.save(client);
 		return clientResponseMapper.toDto(client);
 	}
+
+	@Override
+	@Transactional
+	public ClientResponseDto update(ClientChangeDto clientChangeDto) {
+		Optional<Client> clientOptional = clientRepository.findById(clientChangeDto.getId());
+		if (clientOptional.isPresent()) {
+			Client client = clientOptional.get();
+			client.setMobileNumber(clientChangeDto.getMobileNumber());
+			client.setFirstname(clientChangeDto.getFirstname());
+			client.setMiddlename(clientChangeDto.getMiddlename());
+			client.setSecondname(clientChangeDto.getSecondname());
+
+			Client updatedClient = clientRepository.save(client);
+			return clientResponseMapper.toDto(updatedClient);
+		} else {
+			throw new EntityNotFoundException("Client not found with id: " + clientChangeDto.getId());
+		}
+	}
+
 
 	@Override
 	@Transactional
