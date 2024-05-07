@@ -12,6 +12,7 @@ public interface MasterRepository extends JpaRepository<Master, Long> {
 	Optional<Master> findByMobileNumber(String number);
 	Optional<Master> findByEmail(String email);
 
+	//TODO перенести в другие репозитории для архитектуры
 	@Query(value = """
             SELECT exists(
                           SELECT 1
