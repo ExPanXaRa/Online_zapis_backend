@@ -90,6 +90,11 @@ public class SaleCardServiceImpl implements SaleCardService {
 	}
 
 	@Override
+	public boolean isSaleCardOwner(Long userId, Long saleCardId) {
+		return saleCardRepository.isSaleCardOwner(userId, saleCardId);
+	}
+
+	@Override
 	public SaleCardResponseDto addClient(Long saleCardId, Long clientId) {
 		SaleCard saleCard = saleCardRepository.findById(saleCardId)
 				.orElseThrow(() -> new EntityNotFoundException("SaleCard not found with id: " + saleCardId));

@@ -27,6 +27,11 @@ public class ServiceServiceImpl implements ServiceService {
 	private final ServiceRequestMapper serviceRequestMapper;
 
 	@Override
+	public boolean isServiceOwner(Long userId, Long serviceId) {
+		return serviceRepository.isServiceOwner(userId, serviceId);
+	}
+
+	@Override
 	@Transactional
 	public ServiceResponseDto create(ServiceRequestDto serviceRequestDto) {
 		Authentication authentication =
@@ -57,6 +62,8 @@ public class ServiceServiceImpl implements ServiceService {
 						new ResourceNotFoundException("User not found."));
 		return serviceResponseMapper.toDto(service);
 	}
+
+
 
 	@Override
 	public ServiceResponseDto update(ServiceRequestDto serviceRequestDto, Long id) {

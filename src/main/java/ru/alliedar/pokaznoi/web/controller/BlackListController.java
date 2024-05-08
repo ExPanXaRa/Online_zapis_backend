@@ -30,7 +30,6 @@ import java.util.List;
 @CrossOrigin
 public class BlackListController {
 
-    private final BlackListRepository blackListRepository;
     private final BlackListService blackListService;
 
     @PostMapping("/create")

@@ -87,20 +87,6 @@ public class MasterServiceImpl  implements MasterService {
 		}
 	}
 
-	@Override
-	public boolean isBlackListOwner(Long userId, Long blackListId) {
-		return masterRepository.isBlackListOwner(userId, blackListId);
-	}
-
-	@Override
-	public boolean isSaleCardOwner(Long userId, Long saleCardId) {
-		return masterRepository.isSaleCardOwner(userId, saleCardId);
-	}
-
-	@Override
-	public boolean isServiceOwner(Long userId, Long serviceId) {
-		return masterRepository.isServiceOwner(userId, serviceId);
-	}
 
 
 	@Override

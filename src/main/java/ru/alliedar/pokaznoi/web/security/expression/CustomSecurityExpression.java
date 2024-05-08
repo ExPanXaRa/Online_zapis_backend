@@ -6,8 +6,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ru.alliedar.pokaznoi.service.BlackListService;
 import ru.alliedar.pokaznoi.service.ClientService;
 import ru.alliedar.pokaznoi.service.MasterService;
+import ru.alliedar.pokaznoi.service.SaleCardService;
+import ru.alliedar.pokaznoi.service.ServiceService;
 
 @Service("customSecurityExpression")
 @RequiredArgsConstructor
@@ -15,7 +18,9 @@ public class CustomSecurityExpression {
 
 	private final StringRedisTemplate stringRedisTemplate;
 	private final MasterService masterService;
-	private final ClientService clientService;
+	private final ServiceService serviceService;
+	private final SaleCardService saleCardService;
+	private final BlackListService blackListService;
 
 	public boolean canAccessClient(final Long id) {
 		char clientIndentificator = 0;
@@ -62,7 +67,7 @@ public class CustomSecurityExpression {
 			masterId = Long.parseLong(value);
 		}
 
-		return masterService.isBlackListOwner(masterId, blackListId) && masterIndentificator == 'M';
+		return blackListService.isBlackListOwner(masterId, blackListId) && masterIndentificator == 'M';
 	}
 
 	public boolean canAccessSaleCard(final Long saleCardId) {
@@ -78,7 +83,7 @@ public class CustomSecurityExpression {
 			masterId = Long.parseLong(value);
 		}
 
-		return masterService.isSaleCardOwner(masterId, saleCardId) && masterIndentificator == 'M';
+		return saleCardService.isSaleCardOwner(masterId, saleCardId) && masterIndentificator == 'M';
 	}
 
 	public boolean canAccessService(final Long servicedId) {
@@ -93,8 +98,8 @@ public class CustomSecurityExpression {
 			value = value.substring(1);
 			masterId = Long.parseLong(value);
 		}
-		boolean test = masterService.isServiceOwner(masterId, servicedId);
-		return masterService.isServiceOwner(masterId, servicedId) && masterIndentificator == 'M';
+		boolean test = serviceService.isServiceOwner(masterId, servicedId);
+		return serviceService.isServiceOwner(masterId, servicedId) && masterIndentificator == 'M';
 	}
 
 	public boolean isAdmin() {

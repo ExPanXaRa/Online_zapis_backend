@@ -61,6 +61,10 @@ public class BlackListServiceImpl implements BlackListService {
 		BlackList updatedBlackList = blackListRepository.save(blackList);
 		return blackListResponseMapper.toDto(updatedBlackList);
 	}
+	@Override
+	public boolean isBlackListOwner(Long userId, Long blackListId) {
+		return blackListRepository.isBlackListOwner(userId, blackListId);
+	}
 
 	@Override
 	@Transactional

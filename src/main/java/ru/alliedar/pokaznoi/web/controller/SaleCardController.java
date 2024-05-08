@@ -31,7 +31,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin
 public class SaleCardController {
-	private final SaleCardRepository saleCardRepository;
 	private final SaleCardService saleCardService;
 
 	@PostMapping("/create")

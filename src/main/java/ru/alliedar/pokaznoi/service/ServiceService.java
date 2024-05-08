@@ -8,6 +8,8 @@ import ru.alliedar.pokaznoi.web.dto.service.ServiceResponseDto;
 import java.util.List;
 
 public interface ServiceService {
+
+    boolean isServiceOwner(Long userId, Long serviceId);
     ServiceResponseDto create(ServiceRequestDto serviceRequestDto);
 
     List<ServiceResponseDto> getAll();

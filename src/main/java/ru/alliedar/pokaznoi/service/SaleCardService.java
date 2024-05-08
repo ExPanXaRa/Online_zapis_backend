@@ -9,6 +9,7 @@ import ru.alliedar.pokaznoi.web.mappers.toolsOfMaster.SaleCardResponseMapper;
 import java.util.List;
 
 public interface SaleCardService {
+	boolean isSaleCardOwner(Long userId, Long saleCardId);
 	List<SaleCardResponseDto> getAll();
 	SaleCardResponseDto create(SaleCardRequestDto saleCardRequestDto);
 	SaleCardResponseDto update(SaleCardUpdateDto saleCardUpdateDto, Long id);

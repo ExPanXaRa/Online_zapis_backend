@@ -29,7 +29,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin
 public class ServiceController {
-    private final ServiceRepository serviceRepository;
     private final ServiceService serviceService;
 
     @GetMapping
