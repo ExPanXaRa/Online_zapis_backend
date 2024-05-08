@@ -32,6 +32,7 @@ public class OrderRequestDto {
 	@NotNull(message = "Time of start must not be null")
 	private Timestamp timeOfCreate;
 
+
 	private Timestamp timeOfStart;
 	private Timestamp timeOfEnd;
 	private Integer rating;
