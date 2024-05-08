@@ -38,72 +38,73 @@ public class OrderServiceImpl implements OrderService {
 	private final OrderResponseMapper orderResponseMapper;
 
 
+	private boolean isValidOrderTime(LocalDateTime orderTimeStart, LocalDateTime orderTimeEnd, LocalDateTime currentTime) {
+		if (orderTimeStart.toLocalDate().isAfter(currentTime.toLocalDate()) ||
+				(orderTimeStart.toLocalDate().isEqual(currentTime.toLocalDate()) &&
+						orderTimeStart.toLocalTime().isAfter(currentTime.toLocalTime()))) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isOrderTimeValidForMaster(List<Order> masterAndTimeOfCreateDate, LocalDateTime orderTimeStart, LocalDateTime orderTimeEnd) {
+		for (Order orderMaster : masterAndTimeOfCreateDate) {
+			LocalDateTime currentOrderMasterStart = orderMaster.getTimeOfStart().toLocalDateTime();
+			LocalDateTime currentOrderMasterEnd = orderMaster.getTimeOfEnd().toLocalDateTime();
+
+			if (orderTimeStart.isBefore(currentOrderMasterStart) && orderTimeStart.isAfter(currentOrderMasterEnd) &&
+					orderTimeEnd.isBefore(currentOrderMasterStart) && orderTimeEnd.isAfter(currentOrderMasterEnd) &&
+					!(orderTimeStart.isAfter(currentOrderMasterStart) && orderTimeEnd.isBefore(currentOrderMasterEnd)) &&
+					!(currentOrderMasterStart.isAfter(orderTimeStart) && currentOrderMasterEnd.isBefore(orderTimeEnd))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	@Transactional
 	public OrderResponseDto create(OrderRequestDto orderRequestDto) {
-		Client optionalClient = clientService
-				.getById(orderRequestDto.getClient_id());
-
-		Master optionalMaster = masterService
-				.getById(orderRequestDto.getMaster_id());
+		Client optionalClient = clientService.getById(orderRequestDto.getClient_id());
+		Master optionalMaster = masterService.getById(orderRequestDto.getMaster_id());
 
 		if (optionalMaster != null && optionalClient != null) {
 			Order newOrder = new Order();
-
 			BigDecimal newPrice = BigDecimal.valueOf(0);
 			LocalDateTime orderTimeEnd = orderRequestDto.getTimeOfStart().toLocalDateTime();
 			List<ru.alliedar.pokaznoi.domain.service.Service> services = orderRequestDto.getServices();
 			for (ru.alliedar.pokaznoi.domain.service.Service service : services) {
 				ServiceResponseDto currentService = serviceService.getById(service.getId());
 				newPrice = newPrice.add(currentService.getPrice());
-//				orderTimeEnd = orderTimeEnd.((currentService.getStandardTime());
 				String timeString = String.valueOf(currentService.getStandardTime());
 				String[] timeParts = timeString.split(":");
-
 				int hours = Integer.parseInt(timeParts[0]);
 				int minutes = Integer.parseInt(timeParts[1]);
 				int seconds = Integer.parseInt(timeParts[2]);
-
 				orderTimeEnd = orderTimeEnd.plusHours(hours).plusMinutes(minutes).plusSeconds(seconds);
-
 			}
 			newOrder.setPrice(newPrice);
 
 			LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("GMT+6"));
 			LocalDateTime orderTimeStart = orderRequestDto.getTimeOfStart().toLocalDateTime();
-//			LocalDateTime orderTimeEnd = orderRequestDto.getTimeOfEnd().toLocalDateTime();
-
 			List<Order> masterAndTimeOfCreateDate = orderRepository.findByMasterAndTimeOfCreateDate(optionalMaster.getId(),
 					orderRequestDto.getTimeOfStart().toLocalDateTime().toLocalDate());
-			if (orderTimeStart.toLocalDate().isAfter(currentTime.toLocalDate()) ||
-					orderTimeStart.toLocalDate().isEqual(currentTime.toLocalDate())
-							&& orderTimeStart.toLocalTime().isAfter(currentTime
-							.toLocalTime())) {
+
+			if (isValidOrderTime(orderTimeStart, orderTimeEnd, currentTime)) {
 				if (masterAndTimeOfCreateDate.size() != 0) {
-					for (Order orderMaster : masterAndTimeOfCreateDate) {
-						LocalDateTime currentOrderMasterStart = orderMaster.getTimeOfStart().toLocalDateTime();
-						LocalDateTime currentOrderMasterEnd = orderMaster.getTimeOfEnd().toLocalDateTime();
-						// проеверка если время начала заказа валидна по сравнению с текушим
-						if (orderTimeStart.isBefore(currentOrderMasterStart) && orderTimeStart.isAfter(currentOrderMasterEnd) &&
-								orderTimeEnd.isBefore(currentOrderMasterStart) && orderTimeEnd.isAfter(currentOrderMasterEnd) &&
-								!(orderTimeStart.isAfter(currentOrderMasterStart) && orderTimeEnd.isBefore(currentOrderMasterEnd)) &&
-								!(currentOrderMasterStart.isAfter(orderTimeStart) && currentOrderMasterEnd.isBefore(orderTimeEnd))) {
-
-							newOrder.setTimeOfStart(orderRequestDto.getTimeOfStart());
-							newOrder.setTimeOfEnd(Timestamp.valueOf(orderTimeEnd));
-							newOrder.setClient(optionalClient);
-							newOrder.setMaster(optionalMaster);
-						} else {
-							throw new IllegalArgumentException("Начало или конец заказа не валидны");
-						}
-
+					if (isOrderTimeValidForMaster(masterAndTimeOfCreateDate, orderTimeStart, orderTimeEnd)) {
+						newOrder.setTimeOfStart(orderRequestDto.getTimeOfStart());
+						newOrder.setTimeOfEnd(Timestamp.valueOf(orderTimeEnd));
+						newOrder.setClient(optionalClient);
+						newOrder.setMaster(optionalMaster);
+					} else {
+						throw new IllegalArgumentException("Начало или конец заказа не валидны");
 					}
 				} else {
 					newOrder.setTimeOfStart(orderRequestDto.getTimeOfStart());
 					newOrder.setTimeOfEnd(Timestamp.valueOf(orderTimeEnd));
 					newOrder.setClient(optionalClient);
 					newOrder.setMaster(optionalMaster);
-
 				}
 
 				Timestamp timestamp = Timestamp.valueOf(currentTime);
@@ -115,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
 			}
 
 		} else {
-			throw new IllegalArgumentException("Клиетна или мастера не существует");
+			throw new IllegalArgumentException("Клиент или мастер не существует");
 		}
 	}
 }
