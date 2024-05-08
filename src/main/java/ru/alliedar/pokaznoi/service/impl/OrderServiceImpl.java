@@ -21,6 +21,7 @@ import ru.alliedar.pokaznoi.web.dto.service.ServiceResponseDto;
 import ru.alliedar.pokaznoi.web.mappers.order.OrderResponseMapper;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -66,7 +67,7 @@ public class OrderServiceImpl implements OrderService {
 
 	private BigDecimal calculateDiscountPrice(Long clientId, Long masterId, BigDecimal initialPrice) {
 		BigDecimal discount = saleCardService.clientHasSale(clientId, masterId);
-		if (discount.compareTo(BigDecimal.ZERO) != 0) {
+		if (discount != null) {
 			BigDecimal discountedPrice = initialPrice.subtract(initialPrice.multiply(discount.divide(BigDecimal.valueOf(100))));
 			return discountedPrice;
 		} else {
@@ -96,7 +97,8 @@ public class OrderServiceImpl implements OrderService {
 				int seconds = Integer.parseInt(timeParts[2]);
 				orderTimeEnd = orderTimeEnd.plusHours(hours).plusMinutes(minutes).plusSeconds(seconds);
 			}
-			calculateDiscountPrice(orderRequestDto.getClient_id(), orderRequestDto.getMaster_id(), newPrice);
+			newPrice = calculateDiscountPrice(orderRequestDto.getClient_id(), orderRequestDto.getMaster_id(), newPrice);
+			newPrice = newPrice.setScale(2, RoundingMode.HALF_UP);
 			newOrder.setPrice(newPrice);
 
 			LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("GMT+6"));
