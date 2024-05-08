@@ -21,4 +21,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			""", nativeQuery = true)
 	List<Order> findByMasterAndTimeOfCreateDate(@Param("masterId") Long masterId,
 												@Param("dateOfStart") LocalDate dateOfStart);
+
 }

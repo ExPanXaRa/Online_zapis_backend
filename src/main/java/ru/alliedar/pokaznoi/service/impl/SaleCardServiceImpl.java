@@ -21,6 +21,7 @@ import ru.alliedar.pokaznoi.web.dto.toolsOfMaster.SaleCardResponseDto;
 import ru.alliedar.pokaznoi.web.dto.toolsOfMaster.SaleCardUpdateDto;
 import ru.alliedar.pokaznoi.web.mappers.toolsOfMaster.SaleCardResponseMapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -93,6 +94,12 @@ public class SaleCardServiceImpl implements SaleCardService {
 	public boolean isSaleCardOwner(Long userId, Long saleCardId) {
 		return saleCardRepository.isSaleCardOwner(userId, saleCardId);
 	}
+
+	@Override
+	public BigDecimal clientHasSale(Long clientId, Long masterId) {
+		return saleCardRepository.clientHasSale(clientId, masterId);
+	}
+
 
 	@Override
 	public SaleCardResponseDto addClient(Long saleCardId, Long clientId) {

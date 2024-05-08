@@ -6,10 +6,12 @@ import ru.alliedar.pokaznoi.web.dto.toolsOfMaster.SaleCardResponseDto;
 import ru.alliedar.pokaznoi.web.dto.toolsOfMaster.SaleCardUpdateDto;
 import ru.alliedar.pokaznoi.web.mappers.toolsOfMaster.SaleCardResponseMapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface SaleCardService {
 	boolean isSaleCardOwner(Long userId, Long saleCardId);
+	BigDecimal clientHasSale(Long clientId, Long masterId);
 	List<SaleCardResponseDto> getAll();
 	SaleCardResponseDto create(SaleCardRequestDto saleCardRequestDto);
 	SaleCardResponseDto update(SaleCardUpdateDto saleCardUpdateDto, Long id);

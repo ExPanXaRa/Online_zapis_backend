@@ -8,10 +8,12 @@ import ru.alliedar.pokaznoi.domain.client.Client;
 import ru.alliedar.pokaznoi.domain.master.Master;
 import ru.alliedar.pokaznoi.domain.order.Order;
 import ru.alliedar.pokaznoi.repository.OrderRepository;
+import ru.alliedar.pokaznoi.repository.SaleCardRepository;
 import ru.alliedar.pokaznoi.repository.ServiceRepository;
 import ru.alliedar.pokaznoi.service.ClientService;
 import ru.alliedar.pokaznoi.service.MasterService;
 import ru.alliedar.pokaznoi.service.OrderService;
+import ru.alliedar.pokaznoi.service.SaleCardService;
 import ru.alliedar.pokaznoi.service.ServiceService;
 import ru.alliedar.pokaznoi.web.dto.order.OrderRequestDto;
 import ru.alliedar.pokaznoi.web.dto.order.OrderResponseDto;
@@ -31,10 +33,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 	private final OrderRepository orderRepository;
-	private final ServiceRepository serviceRepository;
 	private final ServiceService serviceService;
 	private final ClientService clientService;
 	private final MasterService masterService;
+	private final SaleCardService saleCardService;
 	private final OrderResponseMapper orderResponseMapper;
 
 
@@ -62,6 +64,17 @@ public class OrderServiceImpl implements OrderService {
 		return false;
 	}
 
+	private BigDecimal calculateDiscountPrice(Long clientId, Long masterId, BigDecimal initialPrice) {
+		BigDecimal discount = saleCardService.clientHasSale(clientId, masterId);
+		if (discount.compareTo(BigDecimal.ZERO) != 0) {
+			BigDecimal discountedPrice = initialPrice.subtract(initialPrice.multiply(discount.divide(BigDecimal.valueOf(100))));
+			return discountedPrice;
+		} else {
+			return initialPrice;
+		}
+	}
+
+
 	@Override
 	@Transactional
 	public OrderResponseDto create(OrderRequestDto orderRequestDto) {
@@ -83,6 +96,7 @@ public class OrderServiceImpl implements OrderService {
 				int seconds = Integer.parseInt(timeParts[2]);
 				orderTimeEnd = orderTimeEnd.plusHours(hours).plusMinutes(minutes).plusSeconds(seconds);
 			}
+			calculateDiscountPrice(orderRequestDto.getClient_id(), orderRequestDto.getMaster_id(), newPrice);
 			newOrder.setPrice(newPrice);
 
 			LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("GMT+6"));
