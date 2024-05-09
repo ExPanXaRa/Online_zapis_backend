@@ -1,15 +1,12 @@
 package ru.alliedar.pokaznoi.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.alliedar.pokaznoi.domain.client.Client;
 import ru.alliedar.pokaznoi.domain.master.Master;
 import ru.alliedar.pokaznoi.domain.order.Order;
 import ru.alliedar.pokaznoi.repository.OrderRepository;
-import ru.alliedar.pokaznoi.repository.SaleCardRepository;
-import ru.alliedar.pokaznoi.repository.ServiceRepository;
 import ru.alliedar.pokaznoi.service.ClientService;
 import ru.alliedar.pokaznoi.service.MasterService;
 import ru.alliedar.pokaznoi.service.OrderService;
@@ -24,9 +21,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.temporal.TemporalAmount;
 import java.util.List;
 import java.util.Optional;
 
@@ -133,6 +128,17 @@ public class OrderServiceImpl implements OrderService {
 
 		} else {
 			throw new IllegalArgumentException("Клиент или мастер не существует");
+		}
+	}
+
+	@Override
+	@Transactional
+	public void delete(Long orderId) {
+		Optional<Order> optionalOrder = orderRepository.findById(orderId);
+		if (optionalOrder.isPresent()) {
+			orderRepository.delete(optionalOrder.get());
+		} else {
+			throw new IllegalArgumentException("Заказ с указанным идентификатором не найден: " + orderId);
 		}
 	}
 }
