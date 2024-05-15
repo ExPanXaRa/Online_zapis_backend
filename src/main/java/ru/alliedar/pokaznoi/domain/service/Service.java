@@ -5,9 +5,11 @@ import jakarta.persistence.*;
 import lombok.Data;
 import ru.alliedar.pokaznoi.domain.master.Master;
 import ru.alliedar.pokaznoi.domain.order.Order;
+import ru.alliedar.pokaznoi.domain.toolsOfMaster.SaleCard;
 
 import java.math.BigDecimal;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -41,5 +43,23 @@ public class Service {
 	@JsonIgnoreProperties("services")
 	List<Order> orders;
 
+	public void addOrders(Order order){
+		if (this.orders != null) {
+			this.orders.add(order);
+		} else {
+			this.setOrders(List.of(order));
+		}
+
+		if (order.getServices() != null) {
+			order.getServices().add(this);
+		} else {
+			order.setServices(new ArrayList<>(List.of(this)));
+		}
+	}
+
+	public void removeOrders(Order order){
+		this.orders.remove(order);
+		order.getServices().remove(this);
+	}
 }
 

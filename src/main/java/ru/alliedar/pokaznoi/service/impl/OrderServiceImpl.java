@@ -93,6 +93,7 @@ public class OrderServiceImpl implements OrderService {
 				int minutes = Integer.parseInt(timeParts[1]);
 				int seconds = Integer.parseInt(timeParts[2]);
 				orderTimeEnd = orderTimeEnd.plusHours(hours).plusMinutes(minutes).plusSeconds(seconds);
+				serviceService.addOrders(newOrder, service.getId());
 			}
 			newPrice = calculateDiscountPrice(orderRequestDto.getClient_id(), orderRequestDto.getMaster_id(), newPrice);
 			newPrice = newPrice.setScale(2, RoundingMode.HALF_UP);
@@ -122,6 +123,9 @@ public class OrderServiceImpl implements OrderService {
 
 				Timestamp timestamp = Timestamp.valueOf(currentTime);
 				newOrder.setTimeOfCreate(timestamp);
+
+
+
 				orderRepository.save(newOrder);
 				return orderResponseMapper.toDto(newOrder);
 			} else {

@@ -77,7 +77,7 @@ public class Client {
 		if (saleCard.getClients() != null) {
 			saleCard.getClients().add(this);
 		} else {
-			saleCard.setClients(List.of(this));
+			saleCard.setClients(new ArrayList<>(List.of(this)));
 		}
 	}
 

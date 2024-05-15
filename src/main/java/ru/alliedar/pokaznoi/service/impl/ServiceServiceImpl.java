@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import ru.alliedar.pokaznoi.domain.exception.ResourceNotFoundException;
+import ru.alliedar.pokaznoi.domain.order.Order;
 import ru.alliedar.pokaznoi.domain.service.Service;
 import ru.alliedar.pokaznoi.repository.ServiceRepository;
 import ru.alliedar.pokaznoi.service.MasterService;
@@ -83,5 +84,14 @@ public class ServiceServiceImpl implements ServiceService {
 		serviceRepository.deleteById(id);
 	}
 
+	public void addOrders(Order order, Long serviceId){
+		Service service = serviceRepository.getById(serviceId);
+		service.addOrders(order);
+	}
+
+	public void removeOrders(Order order, Long serviceId){
+		Service service = serviceRepository.getById(serviceId);
+		service.removeOrders(order);
+	}
 
 }

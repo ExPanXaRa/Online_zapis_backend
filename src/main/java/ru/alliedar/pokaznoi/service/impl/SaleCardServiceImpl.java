@@ -55,7 +55,11 @@ public class SaleCardServiceImpl implements SaleCardService {
 		saleCard.setMaster(masterService.getById(Long.valueOf(value)));
 		saleCard.setName(saleCardRequestDto.getName());
 		saleCard.setPercent(saleCardRequestDto.getPercent());
-//		clientService.getById(saleCardRequestDto.getClient_id()).addSaleCard(saleCard);
+
+		clientRepository.findById(saleCardRequestDto.getClient_id())
+				.orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + saleCardRequestDto.getClient_id()));
+
+		clientService.getById(saleCardRequestDto.getClient_id()).addSaleCard(saleCard);
 		saleCardRepository.save(saleCard);
 		return saleCardResponseMapper.toDto(saleCard);
 	}
