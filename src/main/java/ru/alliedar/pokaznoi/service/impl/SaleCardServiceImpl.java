@@ -1,0 +1,128 @@
+package ru.alliedar.pokaznoi.service.impl;
+
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.alliedar.pokaznoi.domain.client.Client;
+import ru.alliedar.pokaznoi.domain.toolsOfMaster.BlackList;
+import ru.alliedar.pokaznoi.domain.toolsOfMaster.SaleCard;
+import ru.alliedar.pokaznoi.repository.ClientRepository;
+import ru.alliedar.pokaznoi.repository.SaleCardRepository;
+import ru.alliedar.pokaznoi.service.ClientService;
+import ru.alliedar.pokaznoi.service.MasterService;
+import ru.alliedar.pokaznoi.service.SaleCardService;
+import ru.alliedar.pokaznoi.web.dto.toolsOfMaster.BlackListResponseDto;
+import ru.alliedar.pokaznoi.web.dto.toolsOfMaster.SaleCardRequestDto;
+import ru.alliedar.pokaznoi.web.dto.toolsOfMaster.SaleCardResponseDto;
+import ru.alliedar.pokaznoi.web.dto.toolsOfMaster.SaleCardUpdateDto;
+import ru.alliedar.pokaznoi.web.mappers.toolsOfMaster.SaleCardResponseMapper;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class SaleCardServiceImpl implements SaleCardService {
+	private final StringRedisTemplate stringRedisTemplate;
+	private final MasterService masterService;
+	private final SaleCardRepository saleCardRepository;
+	private final SaleCardResponseMapper saleCardResponseMapper;
+	private final ClientService clientService;
+	private final ClientRepository clientRepository;
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<SaleCardResponseDto> getAll() {
+		List<SaleCard> saleCards = saleCardRepository.findAll();
+		return saleCards.stream()
+				.map(saleCardResponseMapper::toDto)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public SaleCardResponseDto create(SaleCardRequestDto saleCardRequestDto) {
+		Authentication authentication =
+				SecurityContextHolder.getContext().getAuthentication();
+		String key = (String) authentication.getPrincipal();
+		String value = stringRedisTemplate.opsForValue().get(key).substring(1);
+
+		SaleCard saleCard = new SaleCard();
+		saleCard.setMaster(masterService.getById(Long.valueOf(value)));
+		saleCard.setName(saleCardRequestDto.getName());
+		saleCard.setPercent(saleCardRequestDto.getPercent());
+
+		clientRepository.findById(saleCardRequestDto.getClient_id())
+				.orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + saleCardRequestDto.getClient_id()));
+
+		clientService.getById(saleCardRequestDto.getClient_id()).addSaleCard(saleCard);
+		saleCardRepository.save(saleCard);
+		return saleCardResponseMapper.toDto(saleCard);
+	}
+
+	@Override
+	public SaleCardResponseDto update(SaleCardUpdateDto saleCardUpdateDto, Long id) {
+		SaleCard saleCard = saleCardRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("SaleCard not found with id: " + id));
+
+		saleCard.setName(saleCardUpdateDto.getName());
+		saleCard.setPercent(saleCardUpdateDto.getPercent());
+
+//		if (saleCardUpdateDto.getClients() != null) {
+//			saleCard.setClients(saleCardUpdateDto.getClients());
+//		}
+
+		SaleCard updatedSaleCard = saleCardRepository.save(saleCard);
+		return saleCardResponseMapper.toDto(updatedSaleCard);
+	}
+
+	@Override
+	public SaleCardResponseDto removeClient(Long saleCardId, Long clientId) {
+		SaleCard saleCard = saleCardRepository.findById(saleCardId)
+				.orElseThrow(() -> new EntityNotFoundException("SaleCard not found with id: " + saleCardId));
+
+		Client client = clientRepository.findById(clientId)
+				.orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + clientId));
+
+		saleCard.getClients().remove(client);
+		clientService.getById(clientId).removeSaleCard(saleCard);
+		SaleCard updatedSaleCard = saleCardRepository.save(saleCard);
+		return saleCardResponseMapper.toDto(updatedSaleCard);
+	}
+
+	@Override
+	public boolean isSaleCardOwner(Long userId, Long saleCardId) {
+		return saleCardRepository.isSaleCardOwner(userId, saleCardId);
+	}
+
+	@Override
+	public BigDecimal clientHasSale(Long clientId, Long masterId) {
+		return saleCardRepository.clientHasSale(clientId, masterId);
+	}
+
+
+	@Override
+	public SaleCardResponseDto addClient(Long saleCardId, Long clientId) {
+		SaleCard saleCard = saleCardRepository.findById(saleCardId)
+				.orElseThrow(() -> new EntityNotFoundException("SaleCard not found with id: " + saleCardId));
+
+		Client client = clientRepository.findById(clientId)
+				.orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + clientId));
+
+		if (saleCard.getClients().contains(client)) {
+			throw new IllegalStateException("Client with id " + clientId + " is already associated with SaleCard with id " + saleCardId);
+		}
+
+		saleCard.getClients().add(client);
+		client.addSaleCard(saleCard);
+		SaleCard updatedSaleCard = saleCardRepository.save(saleCard);
+		return saleCardResponseMapper.toDto(updatedSaleCard);
+	}
+
+
+
+}

@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CookieAuthProvider {
-    private final UserDetailsService userDetailsService;
+	private final UserDetailsService userDetailsService;
 
-    public Authentication getAuthentication(final String coockieValue) {
-        UserDetails userDetails =
-                userDetailsService.loadUserByUsername(coockieValue);
-        return new UsernamePasswordAuthenticationToken(
-                userDetails, "", userDetails.getAuthorities());
-    }
+	public Authentication getAuthentication(final String coockieValue) {
+		UserDetails userDetails =
+				userDetailsService.loadUserByUsername(coockieValue);
+		return new UsernamePasswordAuthenticationToken(
+				userDetails, "", userDetails.getAuthorities());
+	}
 
 }

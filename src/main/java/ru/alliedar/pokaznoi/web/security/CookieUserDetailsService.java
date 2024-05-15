@@ -5,20 +5,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.alliedar.pokaznoi.repository.UserRepository;
+import ru.alliedar.pokaznoi.repository.MasterRepository;
 
 @Service
 @RequiredArgsConstructor
 public class CookieUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+	private final MasterRepository masterRepository;
 
-    @Override
-    @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(final String login) {
-        return (UserDetails) userRepository.findByUsername(login)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "User with email:" + login + " not found."));
-    }
+	@Override
+	@Transactional(readOnly = true)
+	public UserDetails loadUserByUsername(final String mobileNumber) {
+		return (UserDetails) masterRepository.findByMobileNumber(mobileNumber)
+				.orElseThrow(() -> new IllegalArgumentException(
+						"User with phone:" + mobileNumber + " not found."));
+	}
 
 }

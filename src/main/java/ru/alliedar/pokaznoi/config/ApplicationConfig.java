@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -23,31 +24,52 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
 import ru.alliedar.pokaznoi.service.props.MinioProperties;
 import ru.alliedar.pokaznoi.web.security.CookieAuthFilter;
+import static org.springframework.http.HttpHeaders.ACCEPT;
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS;
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS;
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.HttpHeaders.ORIGIN;
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.OPTIONS;
+import static org.springframework.http.HttpMethod.PATCH;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-// @EnableMethodSecurity //для работы кастомных секьюрити эксепшенов
+@EnableMethodSecurity //для работы кастомных секьюрити эксепшенов
 //@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final StringRedisTemplate stringRedisTemplate;
-    private final ApplicationContext applicationContext;
-    private final MinioProperties minioProperties;
+	private final StringRedisTemplate stringRedisTemplate;
+	private final ApplicationContext applicationContext;
+	private final MinioProperties minioProperties;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            final AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(
+			final AuthenticationConfiguration configuration) throws Exception {
+		return configuration.getAuthenticationManager();
+	}
 
 //    @Bean // для втрого способа кастомных секьюрити экспешенов
 //    public MethodSecurityExpressionHandler expressionHandler() {
@@ -57,59 +79,60 @@ public class ApplicationConfig {
 //        return expressionHandler;
 //    }
 
-    @Bean
-    public MinioClient minioClient() {
-        return MinioClient.builder()
-                .endpoint(minioProperties.getUrl())
-                .credentials(minioProperties.getAccessKey(),
-                        minioProperties.getSecretKey())
-                .build();
-    }
+	@Bean
+	public MinioClient minioClient() {
+		return MinioClient.builder()
+				.endpoint(minioProperties.getUrl())
+				.credentials(minioProperties.getAccessKey(),
+						minioProperties.getSecretKey())
+				.build();
+	}
 
-    @Bean
-    public OpenAPI openAPI() {
-        return new OpenAPI()
-                .addSecurityItem(new SecurityRequirement()
-                        .addList("bearerAuth"))
-                .components(
-                        new Components()
-                                .addSecuritySchemes(
-                                        "bearerAuth", new SecurityScheme()
-                                                .type(SecurityScheme.Type.HTTP)
-                                                .scheme("bearer")
-                                                .bearerFormat("JWT")
-                                )
-                )
-                .info(new Info()
-                        .title("Task list API")
-                        .description("Demo Spring Boot application")
-                        .version("1.0")
-                );
-    }
+	@Bean
+	public OpenAPI openAPI() {
+		return new OpenAPI()
+				.addSecurityItem(new SecurityRequirement().addList("cookieAuth"))
+				.components(
+						new Components().addSecuritySchemes(
+								"cookieAuth", new SecurityScheme()
+										.type(SecurityScheme.Type.APIKEY)
+										.in(SecurityScheme.In.COOKIE)
+										.name("sessionId")
+						)
+				)
+				.info(new Info()
+						.title("API сервиса онлайн запись клиентов")
+						.description("Демо")
+						.version("1.0")
+				);
+	}
 
-    @Bean
-    public SecurityFilterChain filterChain(final HttpSecurity http)
-            throws Exception {
-        return http
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(sessionManagement ->
-                        sessionManagement
-                                .sessionCreationPolicy(
-                                        SessionCreationPolicy.STATELESS
-                                )
-                )
-                .authorizeHttpRequests((authz) ->
-                        authz
-                                .requestMatchers("/auth/register",
-                                        "/auth/login", "/auth/resetPassword")
-                                .permitAll()
-                                .anyRequest().authenticated()
-                )
-                .addFilterBefore(new CookieAuthFilter(stringRedisTemplate),
-                        UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }
+	@Bean
+	public SecurityFilterChain filterChain(final HttpSecurity http)
+			throws Exception {
+		return http
+				.httpBasic(AbstractHttpConfigurer::disable)
+				.cors(Customizer.withDefaults())
+				.csrf(AbstractHttpConfigurer::disable)
+				.sessionManagement(sessionManagement ->
+						sessionManagement
+								.sessionCreationPolicy(
+										SessionCreationPolicy.STATELESS
+								)
+				)
+				.authorizeHttpRequests((authz) ->
+						authz
+								.requestMatchers("/api/v1/clients/register",
+										"/api/v1/masters/register","/api/v1/masters/login",
+										"/api/v1/clients/login", "/swagger-ui/**", "/v3/api-docs/**")
+								.permitAll()
+//								.requestMatchers("/**").hasRole("ADMIN")
+								.anyRequest().authenticated()
+				)
+				.addFilterBefore(new CookieAuthFilter(stringRedisTemplate),
+						UsernamePasswordAuthenticationFilter.class)
+				.build();
+	}
+
 
 }
