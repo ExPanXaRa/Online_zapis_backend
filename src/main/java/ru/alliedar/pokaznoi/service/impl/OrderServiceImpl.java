@@ -14,6 +14,8 @@ import ru.alliedar.pokaznoi.service.SaleCardService;
 import ru.alliedar.pokaznoi.service.ServiceService;
 import ru.alliedar.pokaznoi.web.dto.order.OrderRequestDto;
 import ru.alliedar.pokaznoi.web.dto.order.OrderResponseDto;
+import ru.alliedar.pokaznoi.web.dto.order.OrderUpdateClientDto;
+import ru.alliedar.pokaznoi.web.dto.order.OrderUpdateMasterDto;
 import ru.alliedar.pokaznoi.web.dto.service.ServiceResponseDto;
 import ru.alliedar.pokaznoi.web.mappers.order.OrderResponseMapper;
 
@@ -129,6 +131,81 @@ public class OrderServiceImpl implements OrderService {
 		} else {
 			throw new IllegalArgumentException("Клиент или мастер не существует");
 		}
+	}
+
+	private Order getOrderById(Long orderId) {
+		return orderRepository.findById(orderId)
+				.orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + orderId));
+	}
+
+	@Override
+	public OrderResponseDto updateClient(OrderUpdateClientDto orderUpdateClientDto, Long orderId) {
+		Order order = getOrderById(orderId);
+		LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("GMT+6"));
+		LocalDateTime orderTimeStart = orderUpdateClientDto.getTimeOfStart().toLocalDateTime();
+
+		if (orderTimeStart.isBefore(currentTime)) {
+			throw new IllegalArgumentException("Start time cannot be in the past");
+		}
+
+		BigDecimal newPrice = BigDecimal.valueOf(0);
+		LocalDateTime orderTimeEnd = orderUpdateClientDto.getTimeOfStart().toLocalDateTime();
+		List<ru.alliedar.pokaznoi.domain.service.Service> services = orderUpdateClientDto.getServices();
+		for (ru.alliedar.pokaznoi.domain.service.Service service : services) {
+			ServiceResponseDto currentService = serviceService.getById(service.getId());
+			newPrice = newPrice.add(currentService.getPrice());
+			String timeString = String.valueOf(currentService.getStandardTime());
+			String[] timeParts = timeString.split(":");
+			int hours = Integer.parseInt(timeParts[0]);
+			int minutes = Integer.parseInt(timeParts[1]);
+			int seconds = Integer.parseInt(timeParts[2]);
+			orderTimeEnd = orderTimeEnd.plusHours(hours).plusMinutes(minutes).plusSeconds(seconds);
+		}
+		newPrice = calculateDiscountPrice(order.getClient().getId(), order.getMaster().getId(), newPrice);
+		newPrice = newPrice.setScale(2, RoundingMode.HALF_UP);
+
+		order.setTimeOfStart(orderUpdateClientDto.getTimeOfStart());
+		order.setTimeOfEnd(Timestamp.valueOf(orderTimeEnd));
+		order.setPrice(newPrice);
+		order.setRating(orderUpdateClientDto.getRating());
+
+		order = orderRepository.save(order);
+		return orderResponseMapper.toDto(order);
+	}
+
+	@Override
+	public OrderResponseDto updateMaster(OrderUpdateMasterDto orderUpdateMasterDto, Long orderId) {
+		Order order = getOrderById(orderId);
+
+		LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("GMT+6"));
+		LocalDateTime orderTimeStart = orderUpdateMasterDto.getTimeOfStart().toLocalDateTime();
+
+		if (orderTimeStart.isBefore(currentTime)) {
+			throw new IllegalArgumentException("Start time cannot be in the past");
+		}
+
+		BigDecimal newPrice = BigDecimal.valueOf(0);
+		LocalDateTime orderTimeEnd = orderUpdateMasterDto.getTimeOfStart().toLocalDateTime();
+		List<ru.alliedar.pokaznoi.domain.service.Service> services = orderUpdateMasterDto.getServices();
+		for (ru.alliedar.pokaznoi.domain.service.Service service : services) {
+			ServiceResponseDto currentService = serviceService.getById(service.getId());
+			newPrice = newPrice.add(currentService.getPrice());
+			String timeString = String.valueOf(currentService.getStandardTime());
+			String[] timeParts = timeString.split(":");
+			int hours = Integer.parseInt(timeParts[0]);
+			int minutes = Integer.parseInt(timeParts[1]);
+			int seconds = Integer.parseInt(timeParts[2]);
+			orderTimeEnd = orderTimeEnd.plusHours(hours).plusMinutes(minutes).plusSeconds(seconds);
+		}
+		newPrice = calculateDiscountPrice(order.getClient().getId(), order.getMaster().getId(), newPrice);
+		newPrice = newPrice.setScale(2, RoundingMode.HALF_UP);
+
+		order.setTimeOfStart(orderUpdateMasterDto.getTimeOfStart());
+		order.setTimeOfEnd(Timestamp.valueOf(orderTimeEnd));
+		order.setPrice(newPrice);
+
+		order = orderRepository.save(order);
+		return orderResponseMapper.toDto(order);
 	}
 
 	@Override
