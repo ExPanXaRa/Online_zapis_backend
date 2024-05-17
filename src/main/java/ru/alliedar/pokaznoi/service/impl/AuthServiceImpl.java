@@ -46,19 +46,6 @@ public class AuthServiceImpl implements AuthService {
 		formData.add("campaign_id", campaignId);
 
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(formData, headers);
-//		RequestBody partFormBody = new FormBody.Builder()
-//				.add("public_key", publicKey)
-//				.add("phone", phoneNumber)
-//				.add("campaign_id", campaignId)
-//				.build();
-//		RequestBody formBody = new MultipartBody.Builder()
-//				.setType(MultipartBody.FORM)
-//				.addPart(partFormBody)
-//				.build();
-//		Request request = new Request.Builder()
-//				.url(url)
-//				.post(formBody)
-//				.build();
 
 		try {
 			ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
