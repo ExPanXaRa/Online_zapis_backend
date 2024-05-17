@@ -37,4 +37,6 @@ minio:
   secretKey: ${MINIO_SECRET_KEY}
 
 bot:
+  key: ${PUBLIC_KEY}
+  id: ${CAMPAIGN_ID}
   token: ${BOT_TOKEN}
