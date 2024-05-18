@@ -1,29 +1,32 @@
 package ru.alliedar.pokaznoi.telegram.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.alliedar.pokaznoi.service.AuthService;
+import ru.alliedar.pokaznoi.telegram.bot.BotAction;
 import ru.alliedar.pokaznoi.telegram.bot.InfoAction;
-import ru.alliedar.pokaznoi.telegram.bot.RegAction;
+import ru.alliedar.pokaznoi.telegram.bot.NumberAskAction;
+import ru.alliedar.pokaznoi.telegram.bot.NumberVerifyAction;
+import ru.alliedar.pokaznoi.telegram.bot.SessionId;
+import ru.alliedar.pokaznoi.telegram.bot.SingTrueAction;
+import ru.alliedar.pokaznoi.telegram.bot.SmsAskAction;
+import ru.alliedar.pokaznoi.telegram.bot.SmsVerifyAction;
 import ru.alliedar.pokaznoi.telegram.bot.ZapisKMasteruBot;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+@RequiredArgsConstructor
 @Configuration
 public class ZapisKMasteruBotConfiguration {
     private final AuthService authService;
-    private final String botToken;
-
-    public ZapisKMasteruBotConfiguration(AuthService authService, @Value("${bot.token}") String botToken) {
-        this.authService = authService;
-        this.botToken = botToken;
-    }
-
     @Bean
     public TelegramBotsApi telegramBotsApi() throws TelegramApiException {
         var api = new TelegramBotsApi(DefaultBotSession.class);
@@ -33,16 +36,16 @@ public class ZapisKMasteruBotConfiguration {
 
     @Bean
     public ZapisKMasteruBot createZapisKMasteruBot() {
-        var actions = Map.of(
-                "/start", new InfoAction(
-                        List.of(
-                                "/start - Команды бота",
-                                "/new - Регистрация пользователя")
-                ),
-                "/new", new RegAction(authService)
-        );
-        return new ZapisKMasteruBot(botToken, authService, actions);
+        Map<String, List<BotAction>> actions = new HashMap<>();
+        var sessionId = new SessionId();
+        actions.put("/start", List.of(new InfoAction(sessionId)));
+        actions.put("/singIn", List.of(
+                new NumberAskAction(sessionId),
+                new NumberVerifyAction(sessionId, authService), // Pass authService to the constructor
+                new SmsAskAction(),
+                new SmsVerifyAction(authService, sessionId),    // Pass authService and sessionId to the constructor
+                new SingTrueAction(sessionId)
+        ));
+        return new ZapisKMasteruBot(actions);
     }
-
 }
-

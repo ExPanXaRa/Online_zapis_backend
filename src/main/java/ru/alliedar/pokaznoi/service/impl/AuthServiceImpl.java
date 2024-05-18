@@ -1,5 +1,7 @@
 package ru.alliedar.pokaznoi.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import okhttp3.FormBody;
 import okhttp3.MultipartBody;
@@ -33,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
 	private final StringRedisTemplate stringRedisTemplate;
 
 	@Override
-	public boolean sendVerificationCode(Long telegramUserId, String phoneNumber) {
+	public void sendVerificationCode(Long telegramUserId, String phoneNumber) {
 		String url = "https://zvonok.com/manager/cabapi_external/api/v1/phones/flashcall/";
 
 		RestTemplate restTemplate = new RestTemplate();
@@ -54,15 +56,12 @@ public class AuthServiceImpl implements AuthService {
 				assert verificationCode != null;
 				stringRedisTemplate.opsForValue()
 						.set(String.valueOf(telegramUserId), verificationCode, 5, TimeUnit.MINUTES);
-				return true;
-
 			} else {
 				throw new IllegalArgumentException("a");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return false;
 	}
 
 	@Override
@@ -76,8 +75,19 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 
-	private String extractVerificationCode(String responseBody) {
-		return responseBody;
+	public String extractVerificationCode(String responseBody) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode rootNode = objectMapper.readTree(responseBody);
+
+			JsonNode pincodeNode = rootNode.path("data").path("pincode");
+			String pincode = pincodeNode.asText();
+
+			return pincode;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
 

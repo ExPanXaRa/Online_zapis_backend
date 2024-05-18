@@ -1,10 +1,12 @@
 package ru.alliedar.pokaznoi.telegram.bot;
 
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-public interface BotAction {
-	BotApiMethod handle(Update update);
+import java.util.ListIterator;
 
-	BotApiMethod callback(Update update);
+public interface BotAction {
+	Resp handle(Update update);
 }
