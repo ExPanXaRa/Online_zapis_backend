@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -36,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
 	private final ClientService clientService;
 
 	@Override
+	@Transactional
 	public void sendVerificationCode(Long telegramUserId, String phoneNumber) {
 		String url = "https://zvonok.com/manager/cabapi_external/api/v1/phones/flashcall/";
 
@@ -66,6 +68,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
+	@Transactional
 	public boolean verifyCode(Long telegramUserId, String code) {
 		String storedCode = stringRedisTemplate.opsForValue().get(String.valueOf(telegramUserId));
 		if (storedCode != null) {
@@ -76,6 +79,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
+	@Transactional
 	public boolean isClientAuthenticated(String chatId) {
 		try {
 			clientService.findByTelegramToken(chatId);

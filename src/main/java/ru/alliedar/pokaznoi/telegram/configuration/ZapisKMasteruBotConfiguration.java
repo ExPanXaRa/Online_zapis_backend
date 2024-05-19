@@ -10,15 +10,14 @@ import ru.alliedar.pokaznoi.service.AuthService;
 import ru.alliedar.pokaznoi.service.ClientService;
 import ru.alliedar.pokaznoi.telegram.bot.BotAction;
 import ru.alliedar.pokaznoi.telegram.bot.InfoAction;
-import ru.alliedar.pokaznoi.telegram.bot.NumberAskAction;
-import ru.alliedar.pokaznoi.telegram.bot.NumberVerifyAction;
+import ru.alliedar.pokaznoi.telegram.bot.authenticatedAction.NumberAskAction;
+import ru.alliedar.pokaznoi.telegram.bot.authenticatedAction.NumberVerifyAction;
 import ru.alliedar.pokaznoi.telegram.bot.SessionId;
-import ru.alliedar.pokaznoi.telegram.bot.SingTrueAction;
-import ru.alliedar.pokaznoi.telegram.bot.SmsAskAction;
-import ru.alliedar.pokaznoi.telegram.bot.SmsVerifyAction;
+import ru.alliedar.pokaznoi.telegram.bot.authenticatedAction.SingTrueAction;
+import ru.alliedar.pokaznoi.telegram.bot.authenticatedAction.SmsAskAction;
+import ru.alliedar.pokaznoi.telegram.bot.authenticatedAction.SmsVerifyAction;
 import ru.alliedar.pokaznoi.telegram.bot.ZapisKMasteruBot;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,7 @@ public class ZapisKMasteruBotConfiguration {
     public ZapisKMasteruBot createZapisKMasteruBot() {
         Map<String, List<BotAction>> actions = new HashMap<>();
         var sessionId = new SessionId();
-        actions.put("/start", List.of(new InfoAction(sessionId)));
+        actions.put("/info", List.of(new InfoAction(sessionId)));
         actions.put("/singIn", List.of(
                 new NumberAskAction(sessionId),
                 new NumberVerifyAction(sessionId, authService), // Pass authService to the constructor
