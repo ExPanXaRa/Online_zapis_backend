@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.alliedar.pokaznoi.service.AuthService;
+import ru.alliedar.pokaznoi.service.ClientService;
 import ru.alliedar.pokaznoi.telegram.bot.BotAction;
 import ru.alliedar.pokaznoi.telegram.bot.InfoAction;
 import ru.alliedar.pokaznoi.telegram.bot.NumberAskAction;
@@ -27,6 +28,7 @@ import java.util.Map;
 @Configuration
 public class ZapisKMasteruBotConfiguration {
     private final AuthService authService;
+    private final ClientService clientService;
     @Bean
     public TelegramBotsApi telegramBotsApi() throws TelegramApiException {
         var api = new TelegramBotsApi(DefaultBotSession.class);
@@ -43,7 +45,7 @@ public class ZapisKMasteruBotConfiguration {
                 new NumberAskAction(sessionId),
                 new NumberVerifyAction(sessionId, authService), // Pass authService to the constructor
                 new SmsAskAction(),
-                new SmsVerifyAction(authService, sessionId),    // Pass authService and sessionId to the constructor
+                new SmsVerifyAction(authService, sessionId, clientService),    // Pass authService and sessionId to the constructor
                 new SingTrueAction(sessionId)
         ));
         return new ZapisKMasteruBot(actions);

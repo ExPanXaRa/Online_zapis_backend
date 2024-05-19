@@ -3,10 +3,6 @@ package ru.alliedar.pokaznoi.service.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import okhttp3.FormBody;
-import okhttp3.MultipartBody;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.http.HttpEntity;
+import ru.alliedar.pokaznoi.domain.client.Client;
+import ru.alliedar.pokaznoi.domain.exception.ResourceNotFoundException;
 import ru.alliedar.pokaznoi.service.AuthService;
+import ru.alliedar.pokaznoi.service.ClientService;
+import ru.alliedar.pokaznoi.telegram.bot.SessionId;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +33,7 @@ public class AuthServiceImpl implements AuthService {
 
 	private final RestTemplate restTemplate = new RestTemplate();
 	private final StringRedisTemplate stringRedisTemplate;
+	private final ClientService clientService;
 
 	@Override
 	public void sendVerificationCode(Long telegramUserId, String phoneNumber) {
@@ -73,6 +74,17 @@ public class AuthServiceImpl implements AuthService {
 			return false;
 		}
 	}
+
+	@Override
+	public boolean isClientAuthenticated(String chatId) {
+		try {
+			clientService.findByTelegramToken(chatId);
+			return true; // Клиент найден, авторизован
+		} catch (ResourceNotFoundException e) {
+			return false; // Клиент не найден, не авторизован
+		}
+	}
+
 
 
 	public String extractVerificationCode(String responseBody) {

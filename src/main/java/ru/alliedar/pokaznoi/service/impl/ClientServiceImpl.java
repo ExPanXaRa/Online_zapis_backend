@@ -39,6 +39,21 @@ public class ClientServiceImpl implements ClientService {
 						new ResourceNotFoundException("Client not found"));
 	}
 
+//	@Override
+//	@Transactional
+//	public Client findByMobileNumber(String phone) {
+//		return clientRepository.findByMobileNumber(phone)
+//				.orElseThrow(() ->
+//						new ResourceNotFoundException("Client not found"));
+//	}
+		@Override
+	@Transactional
+	public Client findByTelegramToken(String chatId) {
+		return clientRepository.findByTelegramToken(chatId)
+				.orElseThrow(() ->
+						new ResourceNotFoundException("Client not found"));
+	}
+
 	@Override
 	@Transactional
 	public ClientResponseDto create(ClientRegisterDto clientRegisterDto) {
@@ -80,6 +95,15 @@ public class ClientServiceImpl implements ClientService {
 			return clientResponseMapper.toDto(updatedClient);
 		} else {
 			throw new EntityNotFoundException("Client not found with id: " + clientChangeDto.getId());
+		}
+	}
+
+	@Override
+	public void clientSaveTokenTg(String phone, String rememberToken) {
+		Optional<Client> client = clientRepository.findByMobileNumber(phone);
+		if (client.isPresent()) {
+			client.get().setRememberToken(rememberToken);
+
 		}
 	}
 

@@ -13,8 +13,7 @@ public class SingTrueAction implements BotAction{
 		var msg = update.getMessage();
 		var chatId = msg.getChatId().toString();
 		var phone = sessionId.get(chatId, "phone", "");
-		var sms = sessionId.get(chatId, "sms", "");
-		var text = String.format("Пользователь зарегистрирован: \n phone:%s, \n sms:%s", phone, sms) ;
+		var text = String.format("Вы вошли в аккаунт: \n phone:%s", phone);
 		return new Resp(false, new SendMessage(chatId, text));
 	}
 }
