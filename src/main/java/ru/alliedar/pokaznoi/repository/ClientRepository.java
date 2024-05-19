@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
 	Optional<Client> findByMobileNumber(String number);
-	Optional<Client> findByTelegramToken(String telegramToken);
+	Optional<Client> findByRememberToken(String rememberToken);
 
 }

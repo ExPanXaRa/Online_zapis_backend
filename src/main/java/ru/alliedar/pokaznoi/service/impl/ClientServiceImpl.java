@@ -46,10 +46,27 @@ public class ClientServiceImpl implements ClientService {
 //				.orElseThrow(() ->
 //						new ResourceNotFoundException("Client not found"));
 //	}
+
+	@Override
+	public boolean exitAccount(String chatId) {
+		try {
+			Optional<Client> optionalClient = clientRepository.findByRememberToken(chatId);
+			if(!optionalClient.isPresent()) {
+				return false;
+			}
+			Client client = optionalClient.get();
+			client.setRememberToken(null);
+			clientRepository.save(client);
+			return true; // Клиент найден, авторизован
+		} catch (ResourceNotFoundException e) {
+			return false; // Клиент не найден, не авторизован
+		}
+	}
+
 	@Override
 	@Transactional
-	public Client findByTelegramToken(String chatId) {
-		return clientRepository.findByTelegramToken(chatId)
+	public Client findByRememberToken(String chatId) {
+		return clientRepository.findByRememberToken(chatId)
 				.orElseThrow(() ->
 						new ResourceNotFoundException("Client not found"));
 	}
@@ -102,8 +119,8 @@ public class ClientServiceImpl implements ClientService {
 	@Transactional
 	public void clientSaveTokenTg(String phone, String rememberToken) {
 		Optional<Client> optionalClient = clientRepository.findByMobileNumber(phone);
-		Client client = optionalClient.get();
-		if (optionalClient.isPresent()) {
+		if (optionalClient.get() != null) {
+			Client client = optionalClient.get();
 			client.setRememberToken(rememberToken);
 			clientRepository.save(client);
 		}

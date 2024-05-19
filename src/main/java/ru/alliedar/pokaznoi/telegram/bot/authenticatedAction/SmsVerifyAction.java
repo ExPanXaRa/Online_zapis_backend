@@ -21,7 +21,7 @@ public class SmsVerifyAction implements BotAction {
 		var sms = msg.getText();
 		var phone = sessionId.get(chatId, "phone", "");
 		if(!authService.verifyCode(Long.valueOf(chatId), sms)) {
-			return new Resp(true, new SendMessage(chatId, "Неверный код"));
+			return new Resp(true, new SendMessage(chatId, "Неверный код, попробуйте ввести еще раз"));
 		}
 		clientService.clientSaveTokenTg(phone, chatId);
 		sessionId.put(chatId, "sms", sms);

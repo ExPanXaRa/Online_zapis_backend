@@ -10,6 +10,8 @@ import ru.alliedar.pokaznoi.service.AuthService;
 import ru.alliedar.pokaznoi.service.ClientService;
 import ru.alliedar.pokaznoi.telegram.bot.BotAction;
 import ru.alliedar.pokaznoi.telegram.bot.InfoAction;
+import ru.alliedar.pokaznoi.telegram.bot.StartAction;
+import ru.alliedar.pokaznoi.telegram.bot.authenticatedAction.ExitAction;
 import ru.alliedar.pokaznoi.telegram.bot.authenticatedAction.NumberAskAction;
 import ru.alliedar.pokaznoi.telegram.bot.authenticatedAction.NumberVerifyAction;
 import ru.alliedar.pokaznoi.telegram.bot.SessionId;
@@ -39,14 +41,15 @@ public class ZapisKMasteruBotConfiguration {
     public ZapisKMasteruBot createZapisKMasteruBot() {
         Map<String, List<BotAction>> actions = new HashMap<>();
         var sessionId = new SessionId();
-        actions.put("/info", List.of(new InfoAction(sessionId)));
+        actions.put("/start", List.of(new StartAction(sessionId, authService)));
+        actions.put("/info", List.of(new InfoAction()));
         actions.put("/singIn", List.of(
                 new NumberAskAction(sessionId),
                 new NumberVerifyAction(sessionId, authService), // Pass authService to the constructor
                 new SmsAskAction(),
                 new SmsVerifyAction(authService, sessionId, clientService),    // Pass authService and sessionId to the constructor
-                new SingTrueAction(sessionId)
-        ));
+                new SingTrueAction(sessionId)));
+        actions.put("/exit", List.of(new ExitAction(clientService)));
         return new ZapisKMasteruBot(actions);
     }
 }

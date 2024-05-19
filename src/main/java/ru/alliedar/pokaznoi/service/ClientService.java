@@ -34,7 +34,8 @@ public interface ClientService {
 	//						new ResourceNotFoundException("Client not found"));
 	//	}
 	@Transactional
-	Client findByTelegramToken(String chatId);
+	Client findByRememberToken(String chatId);
+	public boolean exitAccount(String chatId);
 
 	ClientResponseDto create(ClientRegisterDto clientRegisterDto);
 	ClientResponseDto update(ClientChangeDto clientChangeDto);

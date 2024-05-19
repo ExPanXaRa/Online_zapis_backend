@@ -79,16 +79,14 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	@Transactional
 	public boolean isClientAuthenticated(String chatId) {
 		try {
-			clientService.findByTelegramToken(chatId);
+			clientService.findByRememberToken(chatId);
 			return true; // Клиент найден, авторизован
 		} catch (ResourceNotFoundException e) {
 			return false; // Клиент не найден, не авторизован
 		}
 	}
-
 
 
 	public String extractVerificationCode(String responseBody) {
